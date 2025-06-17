@@ -5,6 +5,8 @@ import Signin from "./Components/Signing";
 import CreateAccountForm from "./Components/CreateAccountForm";
 import TextileDesign from "./Components/TextileDesign/textileDesign";
 import TextilePage from "./Components/TextileDesign/Textilepage";
+import Contact from "./Components/Contact";
+import AccountPage from "./Components/Account";
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -29,6 +31,14 @@ const appRouter = createBrowserRouter([
       {
         path: "/textileai",
         element: <TextilePage />,
+      },
+      {
+        path: "/contact",
+        element: <Contact />,
+      },
+      {
+        path: "/account",
+        element: <AccountPage />,
       },
     ],
   },

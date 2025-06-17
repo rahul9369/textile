@@ -7,6 +7,7 @@ import coin from "../../assets/coin.png";
 import imageIcon from "../../assets/esp.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import vector from "../../assets/vector.png";
 
 export default function TextileImageGen() {
   const [selectedTab, setSelectedTab] = useState("generate");
@@ -54,9 +55,6 @@ export default function TextileImageGen() {
             With AI-Powered Image Generation <br />
             Customized for Textile Designs
           </p>
-          <button className="mt-4 px-6 cursor-pointer py-2 border-2 border-orange-400 rounded-md text-orange-500 font-semibold hover:bg-orange-100">
-            Enter Account Center
-          </button>
         </div>
         <div className="w-full flex justify-center md:justify-end">
           <img
@@ -146,7 +144,7 @@ export default function TextileImageGen() {
           </div>
 
           {/* Prompt Input */}
-          <div className="flex flex-col sm:flex-row items-stretch gap-2 bg-white rounded-md overflow-hidden p-1">
+          <div className="flex flex-col sm:flex-row relative items-stretch gap-2 bg-white rounded-md overflow-hidden p-1">
             <input
               type="text"
               value={prompt}
@@ -160,6 +158,7 @@ export default function TextileImageGen() {
               }
               className="w-full px-4 py-2 outline-none text-sm sm:text-base"
             />
+            <img src={vector} className="absolute right-42 top-3 " />
 
             <button
               onClick={handleSubmit}

@@ -56,8 +56,11 @@ const Navbar = () => {
             AI Labs
           </Link>
 
-          <Link to="#" className="hover:text-orange-800 pt-2">
+          <Link to="/contact" className="hover:text-orange-800 pt-2">
             Contact
+          </Link>
+          <Link to="/account" className="hover:text-orange-800 pt-2">
+            Account
           </Link>
 
           <Link
@@ -75,8 +78,12 @@ const Navbar = () => {
             AI Labs
           </Link>
 
-          <Link to="#" className="hover:text-orange-100">
+          <Link to="/contact" className="hover:text-orange-100">
             Contact
+          </Link>
+
+          <Link to="/account" className="hover:text-orange-100">
+            Account
           </Link>
 
           <Link
