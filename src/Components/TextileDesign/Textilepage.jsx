@@ -46,9 +46,6 @@ export default function TextileDesignPage() {
             With AI-Powered Image Generation <br /> Customized for Textile
             Designs
           </p>
-          <button className="mt-4 px-6 py-2 border-2 border-orange-400 rounded-md text-orange-500 font-semibold hover:bg-orange-100">
-            Enter Account Center
-          </button>
         </div>
 
         {/* Banner */}
