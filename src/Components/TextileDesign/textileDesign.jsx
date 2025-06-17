@@ -7,7 +7,7 @@ import coin from "../../assets/coin.png";
 import imageIcon from "../../assets/esp.png";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import vector from "../../assets/vector.png";
+import vector from "../../assets/Vector.png";
 
 export default function TextileImageGen() {
   const [selectedTab, setSelectedTab] = useState("generate");
