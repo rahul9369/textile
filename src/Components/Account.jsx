@@ -100,38 +100,39 @@ const AccountPage = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
             {/* ONE TIME PLAN */}
-            <div className="border-2 border-[#292C33] p-4 rounded-md w-full flex flex-col justify-between">
-              <div>
-                <p className="text-sm text-[#E29642] font-semibold mb-2">
-                  Package Type
-                </p>
-                <h3 className="text-lg font-bold mb-2 text-[#DB9245]">
-                  ONE TIME
-                </h3>
-                <ul className="text-sm list-disc list-inside space-y-1 mb-4">
-                  <li>Base Claw Coins Assigned One Time by Admin</li>
-                  <li>Per Image Generated Costs 1 CC</li>
-                  <li>Per Image Edit Costs 1 CC</li>
-                  <li>
-                    Add On ( <strong>1 CC = ₹ 6</strong> )
-                  </li>
-                </ul>
-              </div>
-              <button className="bg-[#DB9245] w-full py-2 text-white rounded-md hover:opacity-90">
-                ACTIVE
-              </button>
-            </div>
+            <div className="border-2 border-[#292C33] p-4 lg:pb-10 rounded-md w-full flex flex-col justify-between">
+    <div>
+          <p className="text-sm text-[#E29642] font-semibold mb-2">
+          Package Type
+          </p>
+        <h3 className="text-lg font-bold mb-2 text-[#DB9245]">
+          ONE TIME
+       </h3>
+    <ul className="text-sm list-disc pl-6 space-y-1 mb-4">
+      <li>Base Claw Coins Assigned One Time by Admin</li>
+      <li>Per Image Generated Costs 1 CC</li>
+      <li>Per Image Edit Costs 1 CC</li>
+      <li>
+        Add On ( <strong>1 CC = ₹ 6</strong> )
+      </li>
+    </ul>
+  </div>
+  <button className="bg-[#DB9245] w-full py-2 text-white rounded-md hover:opacity-90 lg:mt-6">
+    ACTIVE
+  </button>
+</div>
 
-            {/* MONTHLY PLAN */}
-            <div className="border-2 border-[#292C33] p-4 rounded-md w-full flex flex-col justify-between">
-              <div>
+
+  {/* MONTHLY PLAN */}
+<div className="border-2 border-[#292C33] p-4 rounded-md w-full flex flex-col justify-between lg:pb-10">
+        <div>
                 <p className="text-sm text-[#E29642] font-semibold mb-2">
                   Package Type
                 </p>
                 <h3 className="text-lg font-bold mb-2 text-[#DB9245]">
                   MONTHLY
                 </h3>
-                <ul className="text-sm list-disc list-inside space-y-1 mb-4">
+                <ul className="text-sm list-disc pl-6 space-y-1 mb-4">
                   <li>Base Claw Coins Assigned Monthly by Admin</li>
                   <li>Per Image Generated Costs 1 CC</li>
                   <li>Per Image Edit Costs 1 CC</li>
@@ -140,7 +141,7 @@ const AccountPage = () => {
                   </li>
                 </ul>
               </div>
-              <button className="bg-[#292C33] w-full py-2 text-white rounded-md hover:opacity-90">
+              <button className="bg-[#292C33] w-full py-2 text-white rounded-md hover:opacity-90 lg:mt-6">
                 GET IT NOW
               </button>
             </div>
