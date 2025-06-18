@@ -87,7 +87,7 @@ const AuthForm = () => {
   return (
     <div className="min-h-screen bg-[#FBDBB5] flex items-center justify-center px-2">
       <div className="w-full max-w-3xl bg-[#d87f35] p-4 rounded-[30px] shadow-lg max-h-[450px] flex items-center justify-center">
-        <div className="w-full max-w-2xl h-[330px] flex flex-col">
+        <div className="w-full max-w-2xl h-[420px] md:h-[330px] flex flex-col">
           <div className="flex justify-evenly mb-4">
             <button
               onClick={() => {
@@ -239,7 +239,7 @@ const AuthForm = () => {
                   className={inputStyle}
                 />
                 <div className="col-span-2 text-sm text-white">
-                  By Clicking “Create Account” you agree to Claw Legaltech’s
+                  By Clicking "Create Account" you agree to Claw Legaltech's
                   Terms and Conditions and
                   <span className="font-semibold text-black cursor-pointer">
                     {" "}
