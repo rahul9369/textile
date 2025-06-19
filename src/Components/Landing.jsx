@@ -72,49 +72,53 @@ export default function TextileLandingPage() {
 
           {/* Stats */}
           <div
-            ref={ref}
-            className="flex flex-wrap gap-4 justify-center sm:justify-start"
-          >
-            {[
-              { value: 98, label: "User Satisfaction Rate" },
-              { value: 98, label: "Faster Order Processing" },
-              { value: "5L", label: "Meters of Fabrics Managed" },
-            ].map((stat, idx) => (
-              <div
-                key={idx}
-                className="bg-orange-200 shadow rounded-lg p-3 w-[30%] sm:w-40 text-center"
-              >
-                <p className="text-2xl font-bold text-orange-500">
-                  <AnimatedCounter value={stat.value} isVisible={inView} />
-                </p>
-                <p className="text-sm">{stat.label}</p>
-              </div>
-            ))}
-          </div>
+  ref={ref}
+  className="flex flex-wrap gap-2 justify-between"
+>
+  {[
+    { value: 98, label: "User Satisfaction Rate" },
+    { value: 98, label: "Faster Order Processing" },
+    { value: "5L", label: "Meters of Fabrics Managed" },
+  ].map((stat, idx) => (
+    <div
+      key={idx}
+      className="bg-orange-200 shadow rounded-lg p-1 w-[30%] text-center h-24 flex flex-col justify-center items-center"
+    >
+      <p className="text-lg sm:text-xl font-bold text-orange-500 leading-tight">
+        <AnimatedCounter value={stat.value} isVisible={inView} />
+      </p>
+      <p className="text-[10px] sm:text-xs leading-tight text-center break-words">
+        {stat.label}
+      </p>
+    </div>
+  ))}
+</div>
+
 
           {/* CTA Buttons */}
-          <motion.div
-            className="flex flex-row gap-4 mt-4 justify-center sm:justify-start"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.7, duration: 0.6 }}
-          >
-            <Link
-              to="/signin"
-              className="w-2/5 sm:w-60 text-white px-6 py-1 sm:py-2 rounded-full border border-white text-center bg-transparent hover:bg-white hover:text-black flex items-center justify-center"
-            >
-              Get Started
-            </Link>
-            <a
-              href="https://play.google.com/store/apps/details?id=com.fabriqs"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="bg-white flex items-center gap-2 text-orange-300 w-2/5 sm:w-60 justify-center border border-orange-500 px-6 py-1 sm:py-2 rounded-full shadow text-center"
-            >
-              <img src={download} className="w-5 h-5" alt="Download Icon" />
-              <span className="text-sm font-semibold">Download Now</span>
-            </a>
-          </motion.div>
+        <motion.div
+  className="flex flex-row gap-3 mt-4 justify-center sm:justify-start"
+  initial={{ opacity: 0 }}
+  animate={{ opacity: 1 }}
+  transition={{ delay: 0.7, duration: 0.6 }}
+>
+  <Link
+    to="/signin"
+    className="w-[48%] sm:w-60 text-white px-4 py-2 sm:py-2 rounded-full border border-white text-center bg-transparent hover:bg-white hover:text-black flex items-center justify-center text-xs sm:text-sm"
+  >
+    Get Started
+  </Link>
+  <a
+    href="https://play.google.com/store/apps/details?id=com.fabriqs"
+    target="_blank"
+    rel="noopener noreferrer"
+    className="bg-white flex items-center gap-1 text-orange-300 w-[48%] sm:w-60 justify-center border border-orange-500 px-4 py-2 sm:py-2 rounded-full shadow text-center text-xs sm:text-sm"
+  >
+    <img src={download} className="w-4 h-4" alt="Download Icon" />
+    <span className="font-semibold whitespace-nowrap">Download Now</span>
+  </a>
+</motion.div>
+
         </div>
       </div>
 
