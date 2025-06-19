@@ -107,36 +107,50 @@ export default function BusinessDashboard() {
        {/* Mobile View */}
 {/* Mobile View */}
 <div className="block md:hidden">
-  <div className="bg-[#292c33] pt-6 pb-10 flex flex-col items-center">
-    <h1 className="text-3xl font-semibold text-white text-center mb-8">
-      Built to Empower Every <br /> Thread of Your Business
-    </h1>
+  <div className="bg-[#292c33] pt-6 pb-36 flex flex-col items-center">
+   <h1 className="text-3xl sm:text-4xl font-semibold text-white text-center mb-8">
+     Built to Empower Every <br /> Thread of Your Business
+  </h1>
 
-    <div className="grid grid-cols-2 gap-4 px-4">
-      {[
-        { img: manage, title: "Manage Multiple Firms", desc: "Seamlessly Switch Between Businesses From One Dashboard" },
-        { img: map, title: "All-in-One Dashboard", desc: "Control Panel To Track Orders, Users, Insights, And Trends" },
-        { img: peoples, title: "Expand & Manage Team", desc: "Add Sales Reps Who Can Take Orders From Anywhere" },
-        { img: star, title: "Powerful AI Labs", desc: "Instantly Generate, Colorify, And Format Textile Designs" },
-      ].map((item, i) => (
-        <div key={i} className="bg-[#fdbb78] p-3 rounded-lg shadow w-full h-full flex flex-col items-center">
-          <img src={item.img} className="mb-2 w-16 h-16" />
-          <h2 className="font-bold text-sm mb-1 text-center">{item.title}</h2>
-          <p className="text-xs leading-snug text-center">{item.desc}</p>
-        </div>
-      ))}
+   <div className="grid grid-cols-2 gap-3 px-3">
+  {[
+    { img: manage, title: "Manage Multiple Firms", desc: "Seamlessly Switch Between Businesses From One Dashboard" },
+    { img: map, title: "All-in-One Dashboard", desc: "Control Panel To Track Orders, Users, Insights, And Trends" },
+    { img: peoples, title: "Expand & Manage Team", desc: "Add Sales Reps Who Can Take Orders From Anywhere" },
+    { img: star, title: "Powerful AI Labs", desc: "Instantly Generate, Colorify, And Format Textile Designs" },
+  ].map((item, i) => (
+    <div
+      key={i}
+      className="bg-[#fdbb78] rounded-lg shadow w-full p-2 flex flex-col"
+    >
+      <div className="flex items-start">
+        <img src={item.img} className="w-10 h-10" alt={item.title} />
+      </div>
+      <div className="mt-2 text-left">
+        <h2 className="font-bold text-xs mb-1 truncate">
+          {item.title}
+        </h2>
+        <p className="text-[10px] leading-snug">
+          {item.desc}
+        </p>
+      </div>
     </div>
+  ))}
+</div>
+
+
   </div>
 
   <div className="flex flex-col mt-4 px-4">
-   <motion.img
+<motion.img
   src={Bussiness}
   alt="Business Dashboard"
   initial={{ opacity: 0, x: -30 }}
   animate={{ opacity: 1, x: 0 }}
   transition={{ duration: 0.6 }}
-  className="w-[90%] max-w-[500px] h-auto drop-shadow-xl rounded-xl mx-auto sm:w-[90%] sm:max-w-[900px] lg:w-[800px]"
+  className="w-[95vw] h-auto drop-shadow-xl rounded-xl mx-auto -mt-32 sm:w-[90vw] lg:w-[85vw]"
 />
+
 
     <h2 className="text-2xl font-semibold mb-3 text-left">Every Second Counts</h2>
     <p className="text-gray-700 mb-5 text-lg text-left">We Make Sure It Works for You</p>
@@ -149,13 +163,14 @@ export default function BusinessDashboard() {
       <li>Assign Team, Take Orders</li>
     </ul>
 
-    <div className="flex flex-wrap justify-start gap-4">
+  <div className="flex flex-wrap justify-start gap-4">
   <a
     href="https://play.google.com/store/apps/details?id=com.fabriqs"
     target="_blank"
     rel="noopener noreferrer"
-    className="bg-[#ff922d] text-white flex items-center gap-2 px-4 py-2 rounded-full hover:bg-[#e47c1c] transition text-sm">
-    <img src={download} alt="Download Icon" className="w-5 h-5 brightness-0 invert" />
+    className="bg-[#ff922d] text-white flex items-center justify-center gap-2 px-4 py-2 rounded-full hover:bg-[#e47c1c] transition text-sm flex-1 sm:flex-none"
+  >
+    <img src={download} alt="Download Icon" className="w-4 h-4 brightness-0 invert" />
     <span>Download Now</span>
   </a>
 
@@ -163,11 +178,13 @@ export default function BusinessDashboard() {
     href={Pdf}
     target="_blank"
     rel="noopener noreferrer"
-    className="border border-[#ff922d] text-[#ff922d] px-4 py-2 rounded-full hover:bg-orange-50 transition text-sm flex items-center gap-2">
-    <img src={learn} className="w-5 h-5" alt="Learn Icon" />
+    className="border border-[#ff922d] text-[#ff922d] flex items-center justify-center gap-2 px-4 py-2 rounded-full hover:bg-orange-50 transition text-sm flex-1 sm:flex-none"
+  >
     <span>Learn More</span>
   </a>
 </div>
+
+
 
   </div>
 </div>
