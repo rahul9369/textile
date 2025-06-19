@@ -23,14 +23,14 @@ export default function Footer() {
         </div>
 
         {/* Contact Info */}
-        <div className="flex flex-row flex-nowrap overflow-hidden justify-center items-center gap-4 mt-6 bg-[#2a2a30] px-2 py-3 rounded-md w-full md:w-[50%] mx-auto">
-          <div className="flex items-center space-x-2 whitespace-nowrap">
+        <div className="flex flex-col md:flex-row justify-center items-center gap-4 mt-6 bg-[#2a2a30] px-4 py-4 rounded-md w-[90%] md:w-[50%] mx-auto text-white text-sm sm:text-base">
+          <div className="flex items-center space-x-2">
             <FaPhoneAlt className="text-orange-400" />
-            <span>+91 9318164924</span>
+            <span className="break-all">+91 9318164924</span>
           </div>
           <div className="flex items-center space-x-2 whitespace-nowrap">
             <FaGlobe className="text-orange-400" />
-            <span>claw.lawyers@gmail.com</span>
+            <span className="break-all">claw.lawyers@gmail.com</span>
           </div>
         </div>
 
