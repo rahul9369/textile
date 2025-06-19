@@ -6,6 +6,7 @@ import grid from "../assets/grid.png";
 import pen from "../assets/pen.png";
 import plus from "../assets/plus.png";
 import star from "../assets/star.png";
+import { Link } from "react-router-dom";
 
 export default function AiMagicSection() {
   return (
@@ -63,7 +64,8 @@ export default function AiMagicSection() {
                   </div>
                 </div>
               ))}
-              <button
+              <Link
+                to="/textile"
                 className="flex items-center cursor-pointer gap-2 w-44 px-4 py-2 border borde-white  text-white rounded-full hover:bg-[#292c33]
  transition">
                 <img
@@ -72,7 +74,7 @@ export default function AiMagicSection() {
                   className="w-5 h-5 filter invert brightness-50"
                 />
                 Generate Now
-              </button>
+              </Link>
             </div>
             <div className="flex  justify-around pt-4">
               {[

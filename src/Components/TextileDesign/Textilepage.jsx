@@ -1,9 +1,10 @@
 import React, { useState } from "react";
 import { FaCog, FaMinus, FaPlus } from "react-icons/fa";
 import Banner from "../../assets/banner.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-
+import { useDispatch } from "react-redux";
+import { setTextileParameters } from "../Features/Textiles/textilesSlice";
 export default function TextileDesignPage() {
   const [designType, setDesignType] = useState("standalone");
   const [complexity, setComplexity] = useState(3);
@@ -12,26 +13,25 @@ export default function TextileDesignPage() {
   const [loading, setLoading] = useState(false);
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleGenerateImages = async () => {
+  const handleSaveParameters = async () => {
     setLoading(true);
+    navigate("/textile");
+
+    const payload = {
+      designType,
+      complexity,
+      numImages,
+      shade,
+    };
+
+    dispatch(setTextileParameters(payload));
+    console.log("Saved to Redux:", payload);
+
+    setLoading(false);
     setError(null);
-
-    try {
-      const res = await axios.post("https://your-api-endpoint.com/generate", {
-        designType,
-        complexity,
-        numImages,
-        shade,
-      });
-
-      setResponse(res.data); // Assume API returns data like image URLs
-    } catch (err) {
-      console.error(err);
-      setError("Failed to generate images");
-    } finally {
-      setLoading(false);
-    }
   };
 
   return (
@@ -75,7 +75,7 @@ export default function TextileDesignPage() {
           <div className="flex gap-2 bg-white rounded-md p-1">
             <button
               onClick={() => setDesignType("standalone")}
-              className={`px-4 py-1 rounded-md font-semibold transition ${
+              className={`px-4 py-1 rounded-md cursor-pointer font-semibold transition ${
                 designType === "standalone"
                   ? "bg-black text-white"
                   : "text-black"
@@ -84,7 +84,7 @@ export default function TextileDesignPage() {
             </button>
             <button
               onClick={() => setDesignType("pattern")}
-              className={`px-4 py-1 rounded-md font-semibold transition ${
+              className={`px-4 py-1 rounded-md cursor-pointer font-semibold transition ${
                 designType === "pattern" ? "bg-black text-white" : "text-black"
               }`}>
               Pattern
@@ -104,19 +104,21 @@ export default function TextileDesignPage() {
         <div className="flex flex-wrap items-center gap-4">
           {/* Complexity */}
           <div className="flex items-center w-76 gap-2 bg-black text-white px-4 py-2 rounded-md">
-            <span className="mr-5">Complexity</span>
+            <span className="mr-4">Complexity</span>
             <div className="bg-white rounded-md py-1 w-50">
               <button
                 onClick={() => setComplexity((prev) => Math.max(1, prev - 1))}
-                className="text-black px-2 py-1 font-bold hover:bg-gray-200">
+                disabled={complexity === 1}
+                className="text-black px-2 py-1 font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200">
                 <FaMinus size={12} />
               </button>
               <span className="text-black px-12 py-0.5 font-semibold">
                 {complexity}
               </span>
               <button
-                onClick={() => setComplexity((prev) => prev + 1)}
-                className="text-black px-2 py-1 font-bold hover:bg-gray-200">
+                onClick={() => setComplexity((prev) => Math.min(10, prev + 1))}
+                disabled={complexity === 10}
+                className="text-black px-2 py-1 font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200">
                 <FaPlus size={12} />
               </button>
             </div>
@@ -128,15 +130,17 @@ export default function TextileDesignPage() {
             <div className="bg-white py-1 rounded-md w-44">
               <button
                 onClick={() => setNumImages((prev) => Math.max(1, prev - 1))}
-                className="text-black px-2 py-1 font-bold hover:bg-gray-200">
+                disabled={numImages === 1}
+                className="text-black px-2 py-1 font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200">
                 <FaMinus size={12} />
               </button>
               <span className="text-black px-11 py-0.5 font-semibold">
                 {numImages}
               </span>
               <button
-                onClick={() => setNumImages((prev) => prev + 1)}
-                className="text-black px-2 py-1 font-bold hover:bg-gray-200">
+                onClick={() => setNumImages((prev) => Math.min(10, prev + 1))}
+                disabled={numImages === 10}
+                className="text-black px-2 py-1 font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-200">
                 <FaPlus size={12} />
               </button>
             </div>
@@ -144,17 +148,17 @@ export default function TextileDesignPage() {
 
           {/* Generate Images */}
           <button
-            onClick={handleGenerateImages}
+            onClick={handleSaveParameters}
             disabled={loading}
-            className="ml-auto bg-[#F7941D] hover:bg-[#e1871a] text-white font-semibold px-5 py-2 rounded-md transition">
-            {loading ? "Generating..." : "Generate Images"}
+            className="ml-auto bg-[#F7941D] hover:bg-orange-500 cursor-pointer text-white font-semibold px-5 py-2 rounded-md transition">
+            {loading ? "Saving..." : "Save Parameters"}
           </button>
         </div>
 
         {/* Response Display */}
         {response && (
           <div className="text-sm text-black">
-            ✅ Images Generated: {JSON.stringify(response)}
+            ✅ Parameters Saved: {JSON.stringify(response)}
           </div>
         )}
         {error && <p className="text-red-600 text-sm">{error}</p>}

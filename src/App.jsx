@@ -7,6 +7,11 @@ import TextileDesign from "./Components/TextileDesign/textileDesign";
 import TextilePage from "./Components/TextileDesign/Textilepage";
 import Contact from "./Components/Contact";
 import AccountPage from "./Components/Account";
+import { store } from "./store";
+import { Provider, useDispatch } from "react-redux";
+import { useEffect } from "react";
+import { loadUserFromStorage } from "./components/features/auth/authSlice";
+
 const appRouter = createBrowserRouter([
   {
     path: "/",
@@ -44,11 +49,21 @@ const appRouter = createBrowserRouter([
   },
 ]);
 
+function AppInitializer() {
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(loadUserFromStorage());
+  }, [dispatch]);
+
+  return <RouterProvider router={appRouter} />;
+}
+
 function App() {
   return (
-    <>
-      <RouterProvider router={appRouter} />
-    </>
+    <Provider store={store}>
+      <AppInitializer />
+    </Provider>
   );
 }
 

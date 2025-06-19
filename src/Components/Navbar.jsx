@@ -1,10 +1,13 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.png";
+import { useSelector } from "react-redux";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+  const currentUser = useSelector((state) => state?.auth?.user);
+  console.log(currentUser);
 
   return (
     <nav className="fixed top-0 left-0 right-0 z-50 px-4 sm:px-8 bg-orange-300 py-3 shadow-md">
@@ -52,29 +55,51 @@ const Navbar = () => {
 
         {/* Middle: Navigation Links (Desktop Only) */}
         <div className="hidden md:flex space-x-6 text-black font-medium text-sm lg:text-base">
-          <Link to="#" className="hover:text-orange-800 pt-2">
-            AI Labs
-          </Link>
-
-          <Link to="/contact" className="hover:text-orange-800 pt-2">
-            Contact
-          </Link>
-          <Link to="/account" className="hover:text-orange-800 pt-2">
-            Account
-          </Link>
-
-          <Link
-            to="/signin"
-            className="px-5 py-2 rounded-full bg-black text-white hover:opacity-90 transition">
-            Get Started
-          </Link>
+          {currentUser ? (
+            <Link to="/textile" className="hover:text-orange-800 pt-2">
+              AI Labs
+            </Link>
+          ) : (
+            <Link to="/signin" className="hover:text-orange-800 pt-2">
+              AI Labs
+            </Link>
+          )}
+          {currentUser ? (
+            <Link to="/contact" className="hover:text-orange-800 pt-2">
+              Contact
+            </Link>
+          ) : (
+            <Link to="/signin" className="hover:text-orange-800 pt-2">
+              Contact
+            </Link>
+          )}
+          {currentUser ? (
+            <Link to="/account" className="hover:text-orange-800 pt-2">
+              Account
+            </Link>
+          ) : (
+            <Link to="/signin" className="hover:text-orange-800 pt-2">
+              Account
+            </Link>
+          )}
+          {currentUser ? (
+            <div className="px-5 py-2 rounded-full bg-black text-white hover:opacity-90 transition">
+              Hi! {currentUser.name || "User"}
+            </div>
+          ) : (
+            <Link
+              to="/signin"
+              className="px-5 py-2 rounded-full bg-black text-white hover:opacity-90 transition">
+              Get Started
+            </Link>
+          )}
         </div>
       </div>
 
       {/* Mobile Menu (Dropdown) */}
       {isOpen && (
         <div className="md:hidden mt-3 flex flex-col space-y-3 text-white font-medium text-sm bg-orange-400 rounded-lg p-4 shadow-lg">
-          <Link to="#" className="hover:text-orange-100">
+          <Link to="/textile" className="hover:text-orange-100">
             AI Labs
           </Link>
 

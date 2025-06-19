@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { loginSuccess } from "./features/auth/authslice";
 
 const AuthForm = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -8,36 +10,118 @@ const AuthForm = () => {
   const [loginStep, setLoginStep] = useState("form");
   const [resetStep, setResetStep] = useState("");
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [signupData, setSignupData] = useState({
+    name: "",
+    email: "",
+    phoneNumber: "",
+    organisationName: "",
+    GSTNumber: "",
+  });
+
+  const handleSignupChange = (e) => {
+    const { name, value } = e.target;
+    setSignupData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSignup = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(
+        "https://inventorymanagement-backend-dev.onrender.com/api/auth/accountCreatationRequest",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(signupData),
+        }
+      );
+
+      if (response.ok) {
+        alert("Signup successful!");
+        setSignupSuccess(true);
+        // Reset form
+        setSignupData({
+          name: "",
+          email: "",
+          phoneNumber: "",
+          organisationName: "",
+          GSTNumber: "",
+        });
+      } else {
+        const errorData = await response.json();
+        console.error("Error:", errorData);
+        alert("Signup failed! Please try again.");
+      }
+    } catch (error) {
+      console.error("Signup failed:", error);
+      alert("Signup failed! Please try again.");
+    }
+  };
+
   const [formData, setFormData] = useState({
     email: "",
     password: "",
-    otp: "",
-    confirmPassword: "",
   });
-  const [errors, setErrors] = useState({});
 
+  const [errors, setErrors] = useState({});
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
   };
 
-  const handleSignup = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setSignupSuccess(true);
-  };
 
-  const handleLoginSubmit = (e) => {
-    e.preventDefault();
-    const { email, password } = formData;
-    const errs = {};
-    if (!email.trim()) errs.email = "Email is required";
-    if (!password.trim()) errs.password = "Password is required";
-    if (Object.keys(errs).length > 0) {
-      setErrors(errs);
-      return;
+    // Validation
+    const newErrors = {};
+    if (!formData.email) newErrors.email = "Email is required";
+    if (!formData.password) newErrors.password = "Password is required";
+    setErrors(newErrors);
+    if (Object.keys(newErrors).length > 0) return;
+
+    try {
+      const response = await fetch(
+        "https://inventorymanagement-backend-dev.onrender.com/api/auth/manager/login",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        }
+      );
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // 🔥 Dispatch Redux action
+        dispatch(loginSuccess({ user: data.user, token: data.token }));
+
+        // 🔐 Optional: Save token to localStorage
+        // localStorage.setItem("token", data.token);
+
+        // Clear form
+        setFormData({ email: "", password: "" });
+
+        alert("Login successful!");
+        navigate("/"); // redirect
+      } else {
+        const errorData = await response.json();
+        alert(errorData.message || "Login failed. Please try again.");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      alert("Something went wrong. Please try again later.");
     }
-    setErrors({});
-    navigate("/");
   };
 
   const resetToLogin = () => {
@@ -173,7 +257,7 @@ const AuthForm = () => {
 
                   <div className="flex justify-end text-sm text-white  font-medium">
                     <button
-                      onClick={handleResetClick}
+                      // onClick={handleResetClick}
                       className="cursor-pointer"
                       type="button">
                       Forgot Password?
@@ -212,32 +296,52 @@ const AuthForm = () => {
                 className="grid grid-cols-1 md:grid-cols-2 gap-2">
                 <input
                   type="text"
+                  name="name"
+                  value={signupData.name}
+                  onChange={handleSignupChange}
                   placeholder="Enter Your Full Name"
                   className={`col-span-2 ${inputStyle}`}
                   required
                 />
+
                 <input
                   type="email"
+                  name="email"
+                  value={signupData.email}
+                  onChange={handleSignupChange}
                   placeholder="Enter Email ID"
                   className={inputStyle}
                   required
                 />
+
                 <input
                   type="tel"
+                  name="phoneNumber"
+                  value={signupData.phoneNumber}
+                  onChange={handleSignupChange}
                   placeholder="Enter Mobile Number"
                   className={inputStyle}
                   required
                 />
+
                 <input
                   type="text"
+                  name="organisationName"
+                  value={signupData.organisationName}
+                  onChange={handleSignupChange}
                   placeholder="Enter Company Name"
                   className={inputStyle}
                 />
+
                 <input
                   type="text"
+                  name="GSTNumber"
+                  value={signupData.GSTNumber}
+                  onChange={handleSignupChange}
                   placeholder="Enter Company GST"
                   className={inputStyle}
                 />
+
                 <div className="col-span-2 text-sm text-white">
                   By Clicking “Create Account” you agree to Claw Legaltech’s
                   Terms and Conditions and
