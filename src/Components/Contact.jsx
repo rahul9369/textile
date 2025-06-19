@@ -23,7 +23,7 @@ const Contact = () => {
 
       <div className="flex flex-col-reverse lg:flex-row w-full max-w-6xl mt-10 rounded-xl shadow-2xl overflow-hidden z-10">
         {/* Left Side - Contact Info */}
-        <div className="bg-[#25262B] text-white w-full lg:w-1/2 p-6 flex flex-col justify-between gap-6">
+        <div className="bg-[#292C33] text-white w-full lg:w-1/2 p-6 flex flex-col justify-between gap-6">
           <div>
             <h2 className="text-white font-bold text-lg mb-8">
               Company Contact <br/> Information

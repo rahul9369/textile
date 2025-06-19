@@ -28,7 +28,7 @@ export default function Footer() {
             <FaPhoneAlt className="text-orange-400" />
             <span className="break-all">+91 9318164924</span>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center space-x-2 whitespace-nowrap">
             <FaGlobe className="text-orange-400" />
             <span className="break-all">claw.lawyers@gmail.com</span>
           </div>
