@@ -94,9 +94,8 @@ export default function TextileLandingPage() {
   ))}
 </div>
 
-
-          {/* CTA Buttons */}
-        <motion.div
+{/* CTA Buttons */}
+<motion.div
   className="flex flex-row gap-3 mt-4 justify-center sm:justify-start"
   initial={{ opacity: 0 }}
   animate={{ opacity: 1 }}
