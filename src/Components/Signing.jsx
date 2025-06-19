@@ -266,7 +266,7 @@ const AuthForm = () => {
 
                   <button
                     type="submit"
-                    className="w-full bg-[#202020] text-white font-semibold py-3 cursor-pointer rounded-md">
+                    className="w-full bg-[#202020] text-white font-semibold py-3 cursor-pointer rounded-md mt-20 sm:mt-0">
                     Log In
                   </button>
                 </form>

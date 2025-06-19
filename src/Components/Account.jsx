@@ -90,64 +90,81 @@ const AccountPage = () => {
               Recharge Wallet
             </button>
           </div>
+           <div className="w-full text-center text-xs text-white mt-2">Add On Can Be Only Used With An Active Plan</div>
         </div>
 
-        {/* Plans */}
-        <div className="lg:col-span-2">
-          <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            AI Labs Pricing Plans
-          </h2>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-            {/* ONE TIME PLAN */}
-            <div className="border-2 border-[#292C33] p-4 lg:pb-10 rounded-md w-full flex flex-col justify-between">
-    <div>
-          <p className="text-sm text-[#E29642] font-semibold mb-2">
-          Package Type
-          </p>
-        <h3 className="text-lg font-bold mb-2 text-[#DB9245]">
-          ONE TIME
-       </h3>
-    <ul className="text-sm list-disc pl-6 space-y-1 mb-4">
-      <li>Base Claw Coins Assigned One Time by Admin</li>
-      <li>Per Image Generated Costs 1 CC</li>
-      <li>Per Image Edit Costs 1 CC</li>
-      <li>
-        Add On ( <strong>1 CC = ₹ 6</strong> )
-      </li>
-    </ul>
-  </div>
-  <button className="bg-[#DB9245] w-full py-2 text-white rounded-md hover:opacity-90 lg:mt-6">
-    ACTIVE
-  </button>
-</div>
-
-
-  {/* MONTHLY PLAN */}
-<div className="border-2 border-[#292C33] p-4 rounded-md w-full flex flex-col justify-between lg:pb-10">
-        <div>
-                <p className="text-sm text-[#E29642] font-semibold mb-2">
-                  Package Type
-                </p>
-                <h3 className="text-lg font-bold mb-2 text-[#DB9245]">
-                  MONTHLY
-                </h3>
-                <ul className="text-sm list-disc pl-6 space-y-1 mb-4">
-                  <li>Base Claw Coins Assigned Monthly by Admin</li>
-                  <li>Per Image Generated Costs 1 CC</li>
-                  <li>Per Image Edit Costs 1 CC</li>
-                  <li>
-                    Add On ( <strong>1 CC = ₹ 6</strong> )
-                  </li>
-                </ul>
-              </div>
-              <button className="bg-[#292C33] w-full py-2 text-white rounded-md hover:opacity-90 lg:mt-6">
-                GET IT NOW
-              </button>
+        {/* Pricing Cards - replace the two right-side divs with four cards */}
+        <div className="lg:col-span-2 flex flex-col">
+          <h2 className="text-xl font-bold text-gray-800 mb-2 text-left">AI Labs Pricing Plans</h2>
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 md:grid-cols-4 xl:grid-cols-4">
+            {/* Starter Card */}
+            <div className="bg-[#F9E1C0] border border-[#25262B] rounded-xl p-3 pt-2 flex flex-col justify-between min-h-[220px] sm:min-h-[320px] max-w-[270px] mx-auto w-full text-xs">
+              <h3 className="font-bold text-lg mb-2 text-[#25262B]">FabrlQs Starter</h3>
+              <div className="text-[#E29642] text-3xl font-bold mb-2">₹ 1500</div>
+              <p className="text-xs text-[#25262B] mb-2">Perfect for individuals and small teams exploring AI tools for the first time</p>
+              <ul className="text-xs text-[#25262B] mb-4 list-disc pl-4">
+                <li>250 Claw Coins</li>
+                <li>Add On Available</li>
+                <li>Generate Textile Designs</li>
+                <li>Edit Textile Designs</li>
+                <li>Convert Designs to EPS</li>
+              </ul>
+              <button className="bg-[#DB9245] text-white font-semibold py-2 rounded-md mt-auto text-sm">Get It Now</button>
             </div>
-
-            {/* Empty div for spacing */}
-            <div className="hidden xl:block"></div>
+            {/* Pro Card */}
+            <div className="bg-[#F9E1C0] border border-[#25262B] rounded-xl p-3 pt-2 flex flex-col justify-between min-h-[220px] sm:min-h-[320px] max-w-[270px] mx-auto w-full text-xs">
+              <h3 className="font-bold text-lg mb-2 text-[#25262B]">FabrlQs Pro</h3>
+              <div className="text-[#E29642] text-3xl font-bold mb-2">₹ 3000</div>
+              <p className="text-xs text-[#25262B] mb-2">Perfect for individuals and small teams exploring AI tools for the first time</p>
+              <ul className="text-xs text-[#25262B] mb-4 list-disc pl-4">
+                <li>500 Claw Coins</li>
+                <li>Add On Available</li>
+                <li>Generate Textile Designs</li>
+                <li>Edit Textile Designs</li>
+                <li>Convert Designs to EPS</li>
+              </ul>
+              <button className="bg-[#DB9245] text-white font-semibold py-2 rounded-md mt-auto text-sm">ACTIVE</button>
+            </div>
+            {/* Elite Card */}
+            <div className="bg-[#F9E1C0] border border-[#25262B] rounded-xl p-3 pt-2 flex flex-col justify-between min-h-[220px] sm:min-h-[320px] max-w-[270px] mx-auto w-full text-xs">
+              <h3 className="font-bold text-lg mb-2 text-[#25262B]">FabrlQs Elite</h3>
+              <div className="text-[#E29642] text-3xl font-bold mb-2">₹ 6000</div>
+              <p className="text-xs text-[#25262B] mb-2">Perfect for individuals and small teams exploring AI tools for the first time</p>
+              <ul className="text-xs text-[#25262B] mb-4 list-disc pl-4">
+                <li>1000 Claw Coins</li>
+                <li>Add On Available</li>
+                <li>Generate Textile Designs</li>
+                <li>Edit Textile Designs</li>
+                <li>Convert Designs to EPS</li>
+              </ul>
+              <button className="bg-[#DB9245] text-white font-semibold py-2 rounded-md mt-auto text-sm">Get It Now</button>
+            </div>
+            {/* Custom Card */}
+            <div className="bg-[#F9E1C0] border border-[#25262B] rounded-xl p-3 pt-6 flex flex-col justify-between min-h-[220px] sm:min-h-[320px] max-w-[270px] mx-auto w-full relative text-xs">
+              <div className="absolute top-0 left-0 w-full bg-[#25262B] text-[#DB9245] text-xs font-bold rounded-t-xl py-2 text-center">FLAT 10 % OFF</div>
+              <h3 className="font-bold text-lg mt-4 mb-2 text-[#25262B]">FabrlQs Custom</h3>
+              <style>{`
+                input[type=number]::-webkit-outer-spin-button,
+                input[type=number]::-webkit-inner-spin-button {
+                  -webkit-appearance: none;
+                  margin: 0;
+                }
+                input[type=number] {
+                  -moz-appearance: textfield;
+                }
+              `}</style>
+              <input type="number" placeholder="Enter Amount of Claw Coins" className="border border-[#25262B] rounded-md px-2 py-2 mb-2 w-full text-xs h-10 bg-[#DB924580]" />
+              <div className="text-[#E29642] text-3xl font-bold mb-2">₹ 0000</div>
+              <ul className="text-xs text-[#25262B] mb-4 list-disc pl-4">
+                <li>Custom Amount of Claw Coins</li>
+                <li>Claw Coins Must Be 1000+</li>
+                <li>Add On Available</li>
+                <li>Generate Textile Designs</li>
+                <li>Edit Textile Designs</li>
+                <li>Convert Designs to EPS</li>
+              </ul>
+              <button className="bg-[#DB9245] text-white font-semibold py-2 rounded-md mt-auto text-sm">Get It Now</button>
+            </div>
           </div>
         </div>
       </div>
