@@ -33,7 +33,7 @@ const authSlice = createSlice({
       state.isAuthenticated = true;
       state.user = user;
       state.token = token;
-
+      console.log(user);
       // Save to localStorage
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));

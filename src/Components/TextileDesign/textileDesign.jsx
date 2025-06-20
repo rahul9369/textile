@@ -151,7 +151,7 @@ export default function TextileImageGen() {
           "https://inventorymanagement-backend-dev.onrender.com/api/genImg/edit-image";
       } else if (selectedTab === "convert") {
         apiUrl =
-          "https://inventorymanagement-backend-dev.onrender.com/api/genImg/convert-to-eps";
+          "https://inventorymanagement-backend-dev.onrender.com/api/genImg/convert_to_eps";
       }
 
       const response = await fetch(apiUrl, {
@@ -201,33 +201,32 @@ export default function TextileImageGen() {
       <div className="w-full max-w-7xl grid grid-cols-1 md:grid-cols-2 items-center gap-8">
         {!result || result?.length === 0 ? (
           <>
-          <div className="text-center pt-10 md:text-left space-y-4">
-  {/* Desktop Heading */}
-  <h1 className="hidden md:block text-5xl font-bold leading-tight">
-    Bring Textile <br />
-    Designs to Life
-  </h1>
+            <div className="text-center pt-10 md:text-left space-y-4">
+              {/* Desktop Heading */}
+              <h1 className="hidden md:block text-5xl font-bold leading-tight">
+                Bring Textile <br />
+                Designs to Life
+              </h1>
 
-  {/* Mobile Heading */}
-  <h1 className="block md:hidden text-2xl font-bold leading-tight">
-    Bring Textile Designs to Life
-  </h1>
+              {/* Mobile Heading */}
+              <h1 className="block md:hidden text-2xl font-bold leading-tight">
+                Bring Textile Designs to Life
+              </h1>
 
-  {/* Description */}
-  <p className="text-sm md:text-lg text-gray-800">
-    With AI-Powered Image Generation <br />
-    Customized for Textile Designs
-  </p>
-</div>
+              {/* Description */}
+              <p className="text-sm md:text-lg text-gray-800">
+                With AI-Powered Image Generation <br />
+                Customized for Textile Designs
+              </p>
+            </div>
 
-           <div className="w-full flex justify-center md:justify-end">
-  <img
-    src={Banner}
-    alt="Illustration"
-    className="w-[360px] sm:w-[400px] md:w-[480px] xl:w-[520px] pt-10 sm:pt-20"
-  />
-</div>
-
+            <div className="w-full flex justify-center md:justify-end">
+              <img
+                src={Banner}
+                alt="Illustration"
+                className="w-[360px] sm:w-[400px] md:w-[480px] xl:w-[520px] pt-10 sm:pt-20"
+              />
+            </div>
           </>
         ) : (
           <div className="col-span-2   pt-10 min-h-110 w-full">
