@@ -111,7 +111,7 @@ export default function AiMagicSection() {
 
 
             {/* Statistics */}
-            <div className="grid grid-cols-2 gap-4 pt-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-4">
               {[
                 { label: "Accurate Design Conversion", value: "95%" },
                 { label: "Recolour Accuracy", value: "98%" },

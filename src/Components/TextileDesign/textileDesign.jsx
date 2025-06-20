@@ -9,6 +9,7 @@ import vector from "../../assets/Vector.png";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
+import { setResultImages } from "../Features/Generate/generateSlice";
 
 export default function TextileImageGen() {
   const [selectedTab, setSelectedTab] = useState("generate");
@@ -26,6 +27,8 @@ export default function TextileImageGen() {
   console.log(numImages);
   console.log(shade);
   const [errorMsg, setErrorMsg] = useState("");
+  const [selectedEditImage, setSelectedEditImage] = useState(null);
+
   const [selectedImage, setSelectedImage] = useState(null);
   const formRef = useRef(null);
   const handleTabClick = (tab) => {
@@ -41,11 +44,40 @@ export default function TextileImageGen() {
       setSelectedFile(file);
     }
   };
+  console.log(selectedFile);
+  const uploadImage = async () => {
+    if (!selectedFile) {
+      console.error("No file selected");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("image", selectedFile);
+
+    try {
+      const response = await fetch(
+        "https://inventorymanagement-backend-trzq.onrender.com/api/upload/upload-image",
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const data = await response.json(); // ✅ Assuming JSON response
+      console.log("Upload successful, JSON response:", data);
+      return data;
+    } catch (error) {
+      console.error("Error uploading file:", error);
+    }
+  };
 
   const handleSubmit = async () => {
     setErrorMsg("");
 
-    // Validation logic
     if (
       (selectedTab === "generate" || selectedTab === "edit") &&
       prompt.trim() === ""
@@ -61,42 +93,67 @@ export default function TextileImageGen() {
 
     setLoading(true);
     setPrompt("");
+    setSelectedEditImage("");
+
+    const toBase64 = (file) =>
+      new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = (error) => reject(error);
+      });
 
     let payload = {};
 
-    if (selectedTab === "generate") {
-      payload = {
-        description: prompt,
-        style: designType,
-        color_info: shade,
-        simplicity: String(complexity),
-        n_options: String(numImages),
-      };
-    } else if (selectedTab === "edit") {
-      payload = {
-        description: prompt,
-        image_url: selectedImage, // make sure `selectedImage` is set when entering edit
-      };
-    } else if (selectedTab === "convert") {
-      // Optional: handle file conversion payload if needed
-      payload = {
-        image_url: selectedFile, // or convert to base64/url before sending
-      };
-    }
-
-    let apiUrl = "";
-    if (selectedTab === "generate") {
-      apiUrl =
-        "https://inventorymanagement-backend-dev.onrender.com/api/genImg/create-image";
-    } else if (selectedTab === "edit") {
-      apiUrl =
-        "https://inventorymanagement-backend-dev.onrender.com/api/genImg/edit-image";
-    } else if (selectedTab === "convert") {
-      apiUrl =
-        "https://inventorymanagement-backend-dev.onrender.com/api/genImg/convert-image";
-    }
-
     try {
+      if (selectedTab === "generate") {
+        payload = {
+          description: prompt,
+          style: designType,
+          color_info: shade,
+          simplicity: String(complexity),
+          n_options: String(numImages),
+        };
+      } else if (selectedTab === "edit") {
+        if (!selectedEditImage && !selectedFile) {
+          setErrorMsg("Please upload or select an image to edit.");
+          setLoading(false);
+          return;
+        }
+
+        const base64Image = selectedFile
+          ? await toBase64(selectedFile)
+          : selectedEditImage;
+
+        payload = {
+          description: prompt,
+          image: base64Image,
+        };
+      } else if (selectedTab === "convert") {
+        const uploaded = await uploadImage(); // now uploads the image
+        if (!uploaded?.url) {
+          setErrorMsg("Image upload failed.");
+          setLoading(false);
+          return;
+        }
+
+        payload = {
+          image: uploaded.url, // use the URL returned from the backend
+        };
+      }
+
+      let apiUrl = "";
+      if (selectedTab === "generate") {
+        apiUrl =
+          "https://inventorymanagement-backend-dev.onrender.com/api/genImg/create-image";
+      } else if (selectedTab === "edit") {
+        apiUrl =
+          "https://inventorymanagement-backend-dev.onrender.com/api/genImg/edit-image";
+      } else if (selectedTab === "convert") {
+        apiUrl =
+          "https://inventorymanagement-backend-dev.onrender.com/api/genImg/convert-to-eps";
+      }
+
       const response = await fetch(apiUrl, {
         method: "POST",
         headers: {
@@ -110,8 +167,19 @@ export default function TextileImageGen() {
       }
 
       const data = await response.json();
-      console.log(`${selectedTab} rahul success:`, data);
-      dispatch(setResult(data?.data?.cloudinary_urls));
+      console.log(`${selectedTab} success:`, data);
+      const output = data?.data;
+
+      let finalResult = [];
+
+      if (Array.isArray(output?.cloudinary_urls)) {
+        finalResult = output.cloudinary_urls;
+      } else if (typeof output?.filename === "string") {
+        finalResult = [output.filename]; // convert single image to array
+      }
+
+      setResult(finalResult);
+      dispatch(setResultImages(finalResult));
     } catch (error) {
       console.error(`${selectedTab} error:`, error);
       setError(error.message);
@@ -169,26 +237,48 @@ export default function TextileImageGen() {
               </div>
             )}
             {Array.isArray(result) && result.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-2  md:grid-cols-3 lg:grid-cols-5 gap-4">
-                {result.slice(0, 10).map((imageUrl, index) => (
-                  <div
-                    key={index}
-                    className="p-2 rounded-lg text-center space-y-2">
-                    <img
-                      src={imageUrl}
-                      alt={`Generated ${index}`}
-                      onClick={() => setSelectedImage(imageUrl)}
-                      className="w-full h-40 object-cover cursor-pointer rounded-md border"
-                    />
+              <>
+                {selectedTab === "generate" ? (
+                  <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+                    {result.slice(0, 10).map((imageUrl, index) => (
+                      <div
+                        key={index}
+                        className="p-2 rounded-lg text-center space-y-2">
+                        <img
+                          src={imageUrl}
+                          alt={`Generated ${index}`}
+                          onClick={() => setSelectedImage(imageUrl)}
+                          className="w-full h-40 object-cover cursor-pointer rounded-md border"
+                        />
+                      </div>
+                    ))}
                   </div>
-                ))}
+                ) : (
+                  <div className="flex justify-center pt-6">
+                    <div className="  px-4">
+                      <img
+                        src={Array.isArray(result) ? result[0] : result}
+                        alt="Edited Result"
+                        onClick={() =>
+                          setSelectedImage(
+                            Array.isArray(result) ? result[0] : result
+                          )
+                        }
+                        className="w-full max-h-[400px] object-contain rounded-lg border cursor-pointer"
+                      />
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+
+            {selectedTab === "generate" && (
+              <div className="flex pt-4 justify-center">
+                <button className="text-black text-[20px] py-2 bg-orange-300 rounded-lg cursor-pointer hover:bg-orange-400 px-6">
+                  Generate Again
+                </button>
               </div>
             )}
-            <div className="flex pt-4 justify-center">
-              <button className="text-black text-[20px] py-2 bg-orange-300 rounded-lg cursor-pointer hover:bg-orange-400 px-6">
-                Generate Again
-              </button>
-            </div>
           </div>
         )}
       </div>
@@ -205,7 +295,8 @@ export default function TextileImageGen() {
               {[
                 { key: "generate", icon: plus, label: "Generate" },
                 { key: "edit", icon: pen, label: "Edit With AI" },
-                { key: "imageToESP", icon: imageIcon, label: "Image to ESP" },
+                { key: "convert", icon: imageIcon, label: "Image to ESP" },
+                ,
               ].map((tab) => (
                 <button
                   key={tab.key}
@@ -239,42 +330,47 @@ export default function TextileImageGen() {
               <button className="bg-black px-3 py-2 rounded-r-lg flex items-center justify-center border border-black border-l-0">
                 <FaPlus className="text-white text-sm" />
               </button>
-              <button className="p-2 rounded-xl bg-black hover:bg-gray-800 transition">
-                <Link to="/textileai">
-                  <FaCog className="text-orange-400 text-lg" />
-                </Link>
-              </button>
+              {selectedTab === "generate" && (
+                <button className="p-2 rounded-xl bg-black hover:bg-gray-800 transition">
+                  <Link to="/textileai">
+                    <FaCog className="text-orange-400 text-lg" />
+                  </Link>
+                </button>
+              )}
             </div>
           </div>
 
           {/* Prompt Input and Upload */}
           <div className="flex flex-col sm:flex-row relative items-stretch gap-2 bg-white rounded-md overflow-hidden p-1">
-            <div className="relative w-full">
-              <input
-                type="text"
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                placeholder={
-                  selectedTab === "generate"
-                    ? "Enter prompt to generate design"
-                    : selectedTab === "edit"
-                    ? "Enter prompt to edit design"
-                    : "Enter image prompt to convert to ESP"
-                }
-                className={`w-full px-4 py-2 outline-none text-sm sm:text-base pr-36 ${
-                  errorMsg &&
-                  !prompt &&
-                  (selectedTab === "generate" || selectedTab === "edit")
-                    ? "border border-red-500"
-                    : ""
-                }`}
-              />
-              {selectedFile && (
-                <span className="absolute right-8 top-3 text-xs text-gray-500 truncate max-w-[140px]">
-                  📎 {selectedFile.name}
-                </span>
-              )}
-            </div>
+            {/* Prompt input - only for generate and edit */}
+            {(selectedTab === "generate" || selectedTab === "edit") && (
+              <div className="relative w-full">
+                <input
+                  type="text"
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  placeholder={
+                    selectedTab === "generate"
+                      ? "Enter prompt to generate design"
+                      : "Enter prompt to edit design"
+                  }
+                  className={`w-full px-4 py-2 outline-none text-sm sm:text-base pr-36 ${
+                    errorMsg && !prompt ? "border border-red-500" : ""
+                  }`}
+                />
+
+                {/* Show uploaded image link (for edit mode) */}
+                {selectedEditImage && (
+                  <a
+                    href={selectedEditImage}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="absolute right-8 top-3 text-xs text-blue-600 underline truncate max-w-[140px]">
+                    📎 {selectedEditImage}
+                  </a>
+                )}
+              </div>
+            )}
 
             {/* File Upload */}
             <input
@@ -282,8 +378,13 @@ export default function TextileImageGen() {
               id="fileUpload"
               accept="image/*"
               onChange={handleFileChange}
-              className="hidden"
+              className={`${
+                selectedTab === "generate" || selectedTab === "edit"
+                  ? "w-auto"
+                  : "w-full"
+              }`}
             />
+
             <label htmlFor="fileUpload">
               <img
                 src={vector}
@@ -343,9 +444,9 @@ export default function TextileImageGen() {
                 className="bg-orange-400 hover:bg-orange-500 text-white py-2 px-4 rounded"
                 onClick={() => {
                   setSelectedTab("edit");
-                  setResult([selectedImage]); // Set the selected image as the one to edit
-                  setSelectedImage(null); // ✅ Close the modal
-
+                  setResult("");
+                  setSelectedEditImage(selectedImage);
+                  setSelectedImage(null);
                   setTimeout(() => {
                     const el = document.getElementById("editFormSection");
                     if (el) {
