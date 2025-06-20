@@ -11,7 +11,7 @@ const Contact = () => {
       {/* Orange Background Behind Top and Half of Page */}
       <div className="absolute top-0 left-0 w-full h-1/2 bg-[#DB9245] z-0"></div>
 
-      <div className="w-full z-10 relative bg-transparent py-10 text-center px-4">
+      <div className="w-full z-10 relative bg-transparent py-10 text-center px-4 mt-12">
         <h1 className="text-3xl md:text-4xl font-bold text-gray-900">
           Get In Touch
         </h1>

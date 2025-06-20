@@ -170,7 +170,7 @@ const AuthForm = () => {
 
   return (
     <div className="min-h-screen bg-[#FBDBB5] flex items-center justify-center px-2">
-      <div className="w-full max-w-3xl bg-[#d87f35] p-4 rounded-[30px] shadow-lg max-h-[450px] flex items-center justify-center">
+      <div className="w-full max-w-3xl bg-[#d87f35] p-4 rounded-[30px] shadow-lg max-h-[450px] flex items-center justify-center min-h-[520px] md:min-h-[350px] mt-16 md:mt-0">
         <div className="w-full max-w-2xl h-[420px] md:h-[330px] flex flex-col">
           <div className="flex justify-evenly mb-4">
             <button
@@ -211,7 +211,7 @@ const AuthForm = () => {
             </button>
           </div>
 
-          <div className="flex-1 overflow-auto">
+          <div className="flex-1 overflow-visible">
             {loginStep === "success" && (
               <div className="flex flex-col items-center justify-center space-y-6 py-4">
                 <FaCheckCircle size={60} className="text-white" />
@@ -230,7 +230,7 @@ const AuthForm = () => {
               activeTab === "login" &&
               resetStep === "" &&
               loginStep === "form" && (
-                <form onSubmit={handleLoginSubmit} className="space-y-4 pt-10">
+                <form onSubmit={handleLoginSubmit} className="space-y-4 ">
                   <input
                     type="email"
                     name="email"
@@ -266,7 +266,7 @@ const AuthForm = () => {
 
                   <button
                     type="submit"
-                    className="w-full bg-[#202020] text-white font-semibold py-3 cursor-pointer rounded-md mt-20 sm:mt-0">
+                    className="w-full bg-[#202020] text-white font-semibold py-3 cursor-pointer rounded-md mt-46 sm:mt-12">
                     Log In
                   </button>
                 </form>
@@ -300,7 +300,7 @@ const AuthForm = () => {
                   value={signupData.name}
                   onChange={handleSignupChange}
                   placeholder="Enter Your Full Name"
-                  className={`col-span-2 ${inputStyle}`}
+                  className={`${inputStyle} md:col-span-2`}
                   required
                 />
 
@@ -342,7 +342,7 @@ const AuthForm = () => {
                   className={inputStyle}
                 />
 
-                <div className="col-span-2 text-sm text-white">
+                <div className="text-sm text-white md:col-span-2">
                   By Clicking "Create Account" you agree to Claw Legaltech's
                   Terms and Conditions and
                   <span className="font-semibold text-black cursor-pointer">
@@ -352,7 +352,7 @@ const AuthForm = () => {
                 </div>
                 <button
                   type="submit"
-                  className="col-span-2 w-full bg-[#202020] cursor-pointer text-white font-semibold py-3 rounded-md mt-2">
+                  className="w-full bg-[#202020] cursor-pointer text-white font-semibold py-3 rounded-md mt-4 md:col-span-2 ">
                   Create Account
                 </button>
               </form>
@@ -361,7 +361,7 @@ const AuthForm = () => {
             {resetStep === "otp" && (
               <form
                 onSubmit={handleResetOtpSubmit}
-                className="space-y-4 pt-10 ">
+                className="space-y-4 sm:pt-10 pt-6 ">
                 <label className="text-white text-center text-lg font-medium block">
                   Reset Password
                 </label>
