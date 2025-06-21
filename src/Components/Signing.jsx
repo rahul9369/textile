@@ -3,6 +3,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { loginSuccess } from "./features/auth/authslice";
+import { toast } from "react-toastify";
 
 const AuthForm = () => {
   const [activeTab, setActiveTab] = useState("login");
@@ -43,7 +44,8 @@ const AuthForm = () => {
       );
 
       if (response.ok) {
-        alert("Signup successful!");
+        toast.success("Signup successful!");
+
         setSignupSuccess(true);
         // Reset form
         setSignupData({
@@ -56,11 +58,11 @@ const AuthForm = () => {
       } else {
         const errorData = await response.json();
         console.error("Error:", errorData);
-        alert("Signup failed! Please try again.");
+        toast.error("Signup failed! Please try again.");
       }
     } catch (error) {
       console.error("Signup failed:", error);
-      alert("Signup failed! Please try again.");
+      toast.error("Signup failed! Please try again.");
     }
   };
 
@@ -111,16 +113,16 @@ const AuthForm = () => {
 
         // Clear form
         setFormData({ email: "", password: "" });
-
-        alert("Login successful!");
+        toast.success("Login successful!");
         navigate("/"); // redirect
       } else {
         const errorData = await response.json();
-        alert(errorData.message || "Login failed. Please try again.");
+
+        toast.error("Login failed. Please try again.");
       }
     } catch (error) {
       console.error("Login error:", error);
-      alert("Something went wrong. Please try again later.");
+      toast.error("Something went wrong. Please try again later.");
     }
   };
 

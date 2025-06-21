@@ -3,18 +3,39 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { logout } from "./features/auth/authSlice";
 import { setSelectedPlan } from "./Features/plan/planSlice";
+import { toast } from "react-toastify";
 
 const AccountPage = () => {
   const currentUser = useSelector((state) => state?.auth?.user);
+  const Coins = useSelector((state) => state?.plan?.selectedPlan);
+  // const selectedPlan = useSelector((state) => state.plan.selectedPlan);
+  console.log(Coins?.planType);
   console.log(currentUser);
   const [rechargeCoins, setRechargeCoins] = useState("");
 
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [customCoins, setCustomCoins] = useState("");
+  // Checks if the plan is expired based on expiryDate
+  const isPlanExpired = (Coins) => {
+    const expiryDate =
+      Coins?.wallet?.expiryDate || Coins?.managerWallet?.expiryDate;
+    if (!expiryDate) return true;
+
+    return new Date(expiryDate).getTime() <= new Date().getTime();
+  };
+
+  const shouldShowGetItNow = (planName) => {
+    if (!Coins) return true; // No plan at all
+    const currentPlan =
+      Coins?.wallet?.plan || Coins?.managerWallet?.plan || Coins?.planType;
+    if (currentPlan?.toLowerCase() !== planName.toLowerCase()) return true; // Different plan
+    return isPlanExpired(Coins); // Expired plan => show Get It Now
+  };
 
   const handleLogout = () => {
     dispatch(logout());
+    toast.success("Logout Successfully !!!");
     localStorage.removeItem("token");
     navigate("/signin");
   };
@@ -105,19 +126,23 @@ const AccountPage = () => {
                 "❌ Server responded with status:",
                 verifyRes.status
               );
-              alert("Something went wrong during payment verification.");
+
+              toast.error("Something went wrong during payment verification.");
+
               return;
             }
 
             if (verifyData?.topUpOrder?.paymentStatus === "paid") {
-              dispatch(setSelectedPlan({ name, price, coins }));
-              alert("✅ Payment verified and plan activated!");
+              dispatch(setSelectedPlan(verifyData));
+              toast.success("Payment verified and plan activated!");
             } else {
-              alert("❌ Payment verification failed. Please contact support.");
+              toast.error(
+                "Payment verification failed. Please contact support."
+              );
             }
           } catch (err) {
             console.error("❌ Verification error:", err);
-            alert("❌ Error verifying payment.");
+            toast.error("Error verifying payment.");
           }
         },
         prefill: {
@@ -204,19 +229,22 @@ const AccountPage = () => {
                 "❌ Server responded with status:",
                 verifyRes.status
               );
-              alert("Something went wrong during payment verification.");
+
+              toast.error("Something went wrong during payment verification.");
               return;
             }
 
             if (verifyData?.topUpOrder?.paymentStatus === "paid") {
-              dispatch(setSelectedPlan({ name, price, coins }));
-              alert("✅ Payment verified and plan activated!");
+              dispatch(setSelectedPlan(verifyData));
+              toast.success("Payment verified and plan activated!");
             } else {
-              alert("❌ Payment verification failed. Please contact support.");
+              toast.error(
+                "Payment verification failed. Please contact support."
+              );
             }
           } catch (err) {
             console.error("❌ Verification error:", err);
-            alert("❌ Error verifying payment.");
+            toast.error("Error verifying payment.");
           }
         },
         prefill: {
@@ -302,9 +330,13 @@ const AccountPage = () => {
         </div>
 
         <div className="text-right">
-          <button className="bg-[#292C33] text-white px-4 py-2 rounded-md hover:opacity-90">
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=claw.lawyers@gmail.com&su=Request%20to%20Edit%20My%20Details&body=Hi%20Team,%0A%0AI%20would%20like%20to%20request%20an%20update%20to%20my%20account%20details.%20Please%20assist%20me.%0A%0AThank%20you."
+            className="bg-[#292C33] text-white px-4 py-2 rounded-md hover:opacity-90 inline-block"
+            target="_blank"
+            rel="noopener noreferrer">
             Request Edit Details
-          </button>
+          </a>
         </div>
       </div>
 
@@ -314,7 +346,9 @@ const AccountPage = () => {
         <div className="bg-[#25262B] text-white p-6 rounded-md flex flex-col justify-between">
           <h2 className="text-xl font-semibold mb-4">Your Wallet</h2>
           <p className="text-sm mb-1">Available Claw Coins</p>
-          <p className="text-2xl font-bold text-white mb-4">4500</p>
+          <p className="text-2xl font-bold text-white mb-4">
+            {Coins?.wallet?.coins || Coins?.managerWallet?.coins}
+          </p>
 
           {/* Inner Add Claw Coins Box */}
           <div className="bg-[#DB9245] p-4 rounded-md">
@@ -338,14 +372,22 @@ const AccountPage = () => {
             </div>
 
             <button
-              onClick={() =>
+              onClick={() => {
+                if (
+                  Coins?.planType ||
+                  Coins?.managerWallet?.plan === "default"
+                ) {
+                  toast.error(" Add On Can Be Only Used With An Active Plan.");
+                  return;
+                }
+
                 handleRecharge({
                   name: "Recharge Custom",
                   price: rechargeCoins * 6,
                   coins: rechargeCoins,
-                })
-              }
-              className="bg-[#25262B] text-white w-full py-2 rounded-md hover:opacity-90">
+                });
+              }}
+              className="bg-[#25262B] hover:bg-[#25262] cursor-pointer text-white w-full py-2 rounded-md hover:opacity-90">
               Recharge Wallet
             </button>
           </div>
@@ -380,15 +422,23 @@ const AccountPage = () => {
                 <li>Convert Designs to EPS</li>
               </ul>
               <button
-                className="bg-[#DB9245] text-white font-semibold py-2 rounded-md mt-auto text-sm"
-                onClick={() =>
-                  handlePayment({
-                    name: "FabrlQs Starter",
-                    price: 1500,
-                    coins: 250,
-                  })
-                }>
-                Get It Now
+                className={`${
+                  shouldShowGetItNow("Starter")
+                    ? "bg-[#DB9245] hover:bg-[#c77f34] cursor-pointe"
+                    : "bg-green-600 hover:bg-green-700 cursor-not-allowed"
+                } text-white font-semibold cursor-pointer py-2 rounded-md mt-auto text-sm`}
+                onClick={() => {
+                  if (shouldShowGetItNow("Starter")) {
+                    handlePayment({
+                      name: "FabrlQs Starter",
+                      price: 1500,
+                      coins: 250,
+                    });
+                  } else {
+                    toast.info("You already have an active plan.");
+                  }
+                }}>
+                {shouldShowGetItNow("Starter") ? "Get It Now" : "Active Now"}
               </button>
             </div>
             {/* Pro Card */}
@@ -411,15 +461,24 @@ const AccountPage = () => {
                 <li>Convert Designs to EPS</li>
               </ul>
               <button
-                onClick={() =>
-                  handlePayment({
-                    name: "FabrlQs Pro",
-                    price: 3000,
-                    coins: 500,
-                  })
-                }
-                className="bg-[#DB9245] text-white font-semibold py-2 rounded-md mt-auto text-sm">
-                Get It Now
+                className={`${
+                  shouldShowGetItNow("Pro")
+                    ? "bg-[#DB9245] hover:bg-[#c77f34] cursor-pointer"
+                    : "bg-green-600 hover:bg-green-700 cursor-not-allowed"
+                } text-white font-semibold py-2 rounded-md mt-auto text-sm transition duration-200`}
+                onClick={() => {
+                  if (shouldShowGetItNow("Pro")) {
+                    handlePayment({
+                      name: "FabrlQs Pro",
+                      price: 3000,
+                      coins: 500,
+                    });
+                  } else {
+                    toast.info("You already have an active plan.");
+                  }
+                }}
+                disabled={!shouldShowGetItNow("Pro")}>
+                {shouldShowGetItNow("Pro") ? "Get It Now" : "Active Now"}
               </button>
             </div>
             {/* Elite Card */}
@@ -442,15 +501,24 @@ const AccountPage = () => {
                 <li>Convert Designs to EPS</li>
               </ul>
               <button
-                onClick={() =>
-                  handlePayment({
-                    name: "FabrlQs Elite",
-                    price: 6000,
-                    coins: 1000,
-                  })
-                }
-                className="bg-[#DB9245] text-white font-semibold py-2 rounded-md mt-auto text-sm">
-                Get It Now
+                className={`${
+                  shouldShowGetItNow("Elite")
+                    ? "bg-[#DB9245] hover:bg-[#c77f34] cursor-pointer"
+                    : "bg-green-600 hover:bg-green-700 cursor-not-allowed"
+                } text-white font-semibold py-2 rounded-md mt-auto text-sm transition duration-200`}
+                onClick={() => {
+                  if (shouldShowGetItNow("Elite")) {
+                    handlePayment({
+                      name: "FabrlQs Elite",
+                      price: 6000,
+                      coins: 1000,
+                    });
+                  } else {
+                    toast.info("You already have an active plan.");
+                  }
+                }}
+                disabled={!shouldShowGetItNow("Elite")}>
+                {shouldShowGetItNow("Elite") ? "Get It Now" : "Active Now"}
               </button>
             </div>
             {/* Custom Card */}
@@ -493,14 +561,19 @@ const AccountPage = () => {
                 <li>Convert Designs to EPS</li>
               </ul>
               <button
-                onClick={() =>
+                onClick={() => {
+                  if (customCoins < 1001) {
+                    toast.error("Claw Coins Must Be 1000+");
+                    return;
+                  }
+
                   handlePayment({
                     name: "FabrlQs Custom",
                     price: customCoins * 6 - customCoins * 6 * 0.1,
                     coins: customCoins,
-                  })
-                }
-                className="bg-[#DB9245] text-white font-semibold py-2 rounded-md mt-auto text-sm">
+                  });
+                }}
+                className="bg-[#DB9245] hover:bg-[#c77f34] cursor-pointer text-white font-semibold py-2 rounded-md mt-auto text-sm">
                 Get It Now
               </button>
             </div>

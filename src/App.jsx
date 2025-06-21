@@ -12,6 +12,8 @@ import { Provider, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { loadUserFromStorage } from "./components/features/auth/authSlice";
 import { fetchPurchasedPlan } from "./Components/Features/plan/planSlice";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const appRouter = createBrowserRouter([
   {
@@ -64,6 +66,7 @@ function AppInitializer() {
 function App() {
   return (
     <Provider store={store}>
+      <ToastContainer position="top-right" autoClose={3000} />
       <AppInitializer />
     </Provider>
   );

@@ -28,6 +28,8 @@ export default function TextileImageGen() {
   console.log(shade);
   const [errorMsg, setErrorMsg] = useState("");
   const [selectedEditImage, setSelectedEditImage] = useState(null);
+  const Coins = useSelector((state) => state?.plan?.selectedPlan);
+  console.log(Coins?.managerWallet?.coins);
 
   const [selectedImage, setSelectedImage] = useState(null);
   const formRef = useRef(null);
@@ -341,7 +343,9 @@ export default function TextileImageGen() {
                   alt="coin"
                   className="w-4 h-4 mr-2 filter brightness-0"
                 />
-                <span className="font-semibold text-black text-md">25693</span>
+                <span className="font-semibold text-black text-md">
+                  {Coins?.managerWallet?.coins}
+                </span>
               </div>
               <button className="bg-black px-3 py-2 rounded-r-lg flex items-center justify-center border border-black border-l-0">
                 <FaPlus className="text-white text-sm" />
@@ -423,9 +427,11 @@ export default function TextileImageGen() {
                 : selectedTab === "edit"
                 ? "Edit"
                 : "Convert"}
+
               <span className="text-white px-1 rounded-full text-md">
-                {numImages}
+                {selectedTab === "generate" ? numImages : "1"}
               </span>
+
               <img src={coin} className="w-4 h-4" />
             </button>
           </div>
