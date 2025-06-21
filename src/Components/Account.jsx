@@ -6,9 +6,12 @@ import { setSelectedPlan } from "./Features/plan/planSlice";
 
 const AccountPage = () => {
   const currentUser = useSelector((state) => state?.auth?.user);
+  console.log(currentUser);
+  const [rechargeCoins, setRechargeCoins] = useState("");
+
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const [customCoins, setCustomCoins] = useState(1000);
+  const [customCoins, setCustomCoins] = useState("");
 
   const handleLogout = () => {
     dispatch(logout());
@@ -17,64 +20,221 @@ const AccountPage = () => {
   };
 
   useEffect(() => {
+    const scriptUrl = "https://checkout.razorpay.com/v1/checkout.js";
+
+    const existingScript = document.querySelector(`script[src="${scriptUrl}"]`);
+    if (existingScript) return;
+
     const script = document.createElement("script");
-    script.src = "https://checkout.razorpay.com/v1/checkout.js";
+    script.src = scriptUrl;
     script.async = true;
+    script.onload = () => console.log("Razorpay script loaded");
+    script.onerror = () => console.error("Failed to load Razorpay script");
     document.body.appendChild(script);
+
     return () => {
-      document.body.removeChild(script);
+      if (script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
     };
   }, []);
 
-  const handlePayment = ({ name, price, coins }) => {
-    const options = {
-      key: "rzp_test_UWcqHHktRV6hxM", // Your Razorpay Key
-      amount: price * 100,
-      currency: "INR",
-      name: "FabrlQs AI",
-      description: name,
-      handler: async function (response) {
-        try {
-          console.log("Razorpay payment response:", response);
-          const verifyRes = await fetch("/api/payment/verify", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${localStorage.getItem("token")}`,
-            },
-            body: JSON.stringify({
-              razorpay_order_id: response.razorpay_order_id,
-              razorpay_payment_id: response.razorpay_payment_id,
-              razorpay_signature: response.razorpay_signature,
-              plan: { name, price, coins },
-            }),
-          });
-
-          const verifyData = await verifyRes.json();
-
-          if (verifyRes.ok && verifyData.success) {
-            dispatch(setSelectedPlan({ name, price, coins }));
-            alert("Payment verified and plan activated!");
-          } else {
-            alert("Payment verification failed.");
-          }
-        } catch (error) {
-          console.error("Verification error:", error);
-          alert("Error verifying payment.");
+  const handlePayment = async ({ name, price, coins }) => {
+    try {
+      // const managerId = currentUser?._id;
+      const managerId = currentUser?.id;
+      // STEP 1: Create Order
+      const orderRes = await fetch(
+        "https://inventorymanagement-backend-dev.onrender.com/api/wallet-topup/create-order",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            managerId: managerId,
+            amount: price,
+            currency: "INR",
+            planType: name.toLowerCase().split(" ")[1], // e.g., "starter" from "FabrlQs Starter"
+          }),
         }
-      },
-      prefill: {
-        name: currentUser?.name || "",
-        email: currentUser?.email || "",
-        contact: currentUser?.phoneNumber || "",
-      },
-      theme: {
-        color: "#DB9245",
-      },
-    };
+      );
 
-    const rzp = new window.Razorpay(options);
-    rzp.open();
+      const orderData = await orderRes.json();
+      console.log(orderData);
+
+      if (!orderRes.ok || !orderData?.razorpayOrderId) {
+        throw new Error("Failed to create Razorpay order.");
+      }
+
+      // STEP 2: Open Razorpay Checkout
+      const options = {
+        key: "rzp_test_UWcqHHktRV6hxM", // Replace with live key in prod
+        amount: price * 100,
+        currency: "INR",
+        name: "FabrlQs AI",
+        description: name,
+        order_id: orderData?.razorpayOrderId, // Must come from backend
+        handler: async function (response) {
+          try {
+            console.log("🧾 Razorpay Response:", response);
+
+            const verifyRes = await fetch(
+              "https://inventorymanagement-backend-dev.onrender.com/api/wallet-topup/verify-payment",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify({
+                  razorpayOrderId: response.razorpay_order_id,
+                  razorpayPaymentId: response.razorpay_payment_id,
+                  razorpaySignature: response.razorpay_signature,
+                }),
+              }
+            );
+
+            const verifyData = await verifyRes.json();
+            console.log(verifyData);
+            console.log("✅ Verify Response:", verifyData);
+
+            if (!verifyRes.ok) {
+              console.error(
+                "❌ Server responded with status:",
+                verifyRes.status
+              );
+              alert("Something went wrong during payment verification.");
+              return;
+            }
+
+            if (verifyData?.topUpOrder?.paymentStatus === "paid") {
+              dispatch(setSelectedPlan({ name, price, coins }));
+              alert("✅ Payment verified and plan activated!");
+            } else {
+              alert("❌ Payment verification failed. Please contact support.");
+            }
+          } catch (err) {
+            console.error("❌ Verification error:", err);
+            alert("❌ Error verifying payment.");
+          }
+        },
+        prefill: {
+          name: currentUser?.name || "",
+          email: currentUser?.email || "",
+          contact: currentUser?.phoneNumber || "",
+        },
+        theme: {
+          color: "#DB9245",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert(error.message || "Something went wrong.");
+    }
+  };
+
+  const handleRecharge = async ({ name, price, coins }) => {
+    try {
+      // const managerId = currentUser?._id;
+      const managerId = currentUser?.id;
+      // STEP 1: Create Order
+      const orderRes = await fetch(
+        "https://inventorymanagement-backend-dev.onrender.com/api/wallet-topup/add-credit",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({
+            managerId: managerId,
+            amount: price,
+            currency: "INR",
+            planType: name.toLowerCase().split(" ")[1], // e.g., "starter" from "FabrlQs Starter"
+          }),
+        }
+      );
+
+      const orderData = await orderRes.json();
+      console.log(orderData);
+
+      if (!orderRes.ok || !orderData?.razorpayOrderId) {
+        throw new Error("Failed to create Razorpay order.");
+      }
+
+      // STEP 2: Open Razorpay Checkout
+      const options = {
+        key: "rzp_test_UWcqHHktRV6hxM", // Replace with live key in prod
+        amount: price * 100,
+        currency: "INR",
+        name: "FabrlQs AI",
+        description: name,
+        order_id: orderData?.razorpayOrderId, // Must come from backend
+        handler: async function (response) {
+          try {
+            console.log("🧾 Razorpay Response:", response);
+
+            const verifyRes = await fetch(
+              "https://inventorymanagement-backend-dev.onrender.com/api/wallet-topup/verify-payment",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${localStorage.getItem("token")}`,
+                },
+                body: JSON.stringify({
+                  razorpayOrderId: response.razorpay_order_id,
+                  razorpayPaymentId: response.razorpay_payment_id,
+                  razorpaySignature: response.razorpay_signature,
+                }),
+              }
+            );
+
+            const verifyData = await verifyRes.json();
+
+            console.log("✅ Verify Response:", verifyData);
+
+            if (!verifyRes.ok) {
+              console.error(
+                "❌ Server responded with status:",
+                verifyRes.status
+              );
+              alert("Something went wrong during payment verification.");
+              return;
+            }
+
+            if (verifyData?.topUpOrder?.paymentStatus === "paid") {
+              dispatch(setSelectedPlan({ name, price, coins }));
+              alert("✅ Payment verified and plan activated!");
+            } else {
+              alert("❌ Payment verification failed. Please contact support.");
+            }
+          } catch (err) {
+            console.error("❌ Verification error:", err);
+            alert("❌ Error verifying payment.");
+          }
+        },
+        prefill: {
+          name: currentUser?.name || "",
+          email: currentUser?.email || "",
+          contact: currentUser?.phoneNumber || "",
+        },
+        theme: {
+          color: "#DB9245",
+        },
+      };
+
+      const rzp = new window.Razorpay(options);
+      rzp.open();
+    } catch (error) {
+      console.error("Payment error:", error);
+      alert(error.message || "Something went wrong.");
+    }
   };
 
   return (
@@ -161,15 +321,31 @@ const AccountPage = () => {
             <label className="block text-sm text-black font-semibold mb-2">
               Add Claw Coins
             </label>
+
+            {/* Step 2: Update input with state */}
             <input
               type="number"
+              value={rechargeCoins}
+              onChange={(e) => setRechargeCoins(Number(e.target.value))}
               placeholder="Enter No of Claw Coins"
               className="w-full p-2 rounded-md border border-gray-300 text-black mb-2 bg-[#FBDBB5]"
             />
+
+            {/* Step 3: Calculate total as coins * 6 */}
             <div className="text-right text-sm text-black mb-2">
-              Total Amount : <span className="font-bold">₹ 6599</span>
+              Total Amount :{" "}
+              <span className="font-bold">₹ {rechargeCoins * 6}</span>
             </div>
-            <button className="bg-[#25262B] text-white w-full py-2 rounded-md hover:opacity-90">
+
+            <button
+              onClick={() =>
+                handleRecharge({
+                  name: "Recharge Custom",
+                  price: rechargeCoins * 6,
+                  coins: rechargeCoins,
+                })
+              }
+              className="bg-[#25262B] text-white w-full py-2 rounded-md hover:opacity-90">
               Recharge Wallet
             </button>
           </div>
@@ -305,7 +481,7 @@ const AccountPage = () => {
               />
 
               <div className="text-[#E29642] text-3xl font-bold mb-2">
-                ₹ {customCoins * 10 - customCoins * 10 * 0.1}
+                ₹ {customCoins * 6 - customCoins * 6 * 0.1}
               </div>
 
               <ul className="text-xs text-[#25262B] mb-4 list-disc pl-4">
@@ -320,7 +496,7 @@ const AccountPage = () => {
                 onClick={() =>
                   handlePayment({
                     name: "FabrlQs Custom",
-                    price: customCoins * 10 - customCoins * 10 * 0.1,
+                    price: customCoins * 6 - customCoins * 6 * 0.1,
                     coins: customCoins,
                   })
                 }

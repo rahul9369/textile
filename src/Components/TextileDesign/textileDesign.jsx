@@ -173,12 +173,14 @@ export default function TextileImageGen() {
       let finalResult = [];
 
       if (Array.isArray(output?.cloudinary_urls)) {
-        finalResult = output.cloudinary_urls;
+        finalResult = output?.cloudinary_urls;
       } else if (typeof output?.filename === "string") {
-        finalResult = [output.filename]; // convert single image to array
+        finalResult = [output?.filename]; // convert single image to array
       }
+      console.log(finalResult);
 
       setResult(finalResult);
+      console.log(result);
       dispatch(setResultImages(finalResult));
     } catch (error) {
       console.error(`${selectedTab} error:`, error);
@@ -235,7 +237,7 @@ export default function TextileImageGen() {
                 <div className="w-12 h-12 border-4 border-orange-400 border-t-transparent rounded-full animate-spin"></div>
               </div>
             )}
-            {Array.isArray(result) && result.length > 0 && (
+            {Array?.isArray(result) && result?.length > 0 && (
               <>
                 {selectedTab === "generate" ? (
                   <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
@@ -255,16 +257,31 @@ export default function TextileImageGen() {
                 ) : (
                   <div className="flex justify-center pt-6">
                     <div className="  px-4">
-                      <img
-                        src={Array.isArray(result) ? result[0] : result}
-                        alt="Edited Result"
-                        onClick={() =>
-                          setSelectedImage(
-                            Array.isArray(result) ? result[0] : result
-                          )
-                        }
-                        className="w-full max-h-[400px] object-contain rounded-lg border cursor-pointer"
-                      />
+                      {selectedTab === "edit" ? (
+                        <img
+                          src={Array?.isArray(result) ? result[0] : result}
+                          alt="Edited Result"
+                          onClick={() =>
+                            setSelectedImage(
+                              Array.isArray(result) ? result[0] : result
+                            )
+                          }
+                          className="w-full max-h-[400px] object-contain rounded-lg border cursor-pointer"
+                        />
+                      ) : selectedTab === "convert" ? (
+                        <div className="text-center space-y-4">
+                          <p className="text-lg font-semibold text-black">
+                            EPS File Generated
+                          </p>
+
+                          <a
+                            href={Array.isArray(result) ? result[0] : result}
+                            download
+                            className="inline-block bg-orange-500 text-white px-4 py-2 rounded hover:bg-orange-600">
+                            📎 Download EPS
+                          </a>
+                        </div>
+                      ) : null}
                     </div>
                   </div>
                 )}

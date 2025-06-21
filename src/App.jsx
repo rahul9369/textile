@@ -11,6 +11,7 @@ import { store } from "./store";
 import { Provider, useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { loadUserFromStorage } from "./components/features/auth/authSlice";
+import { fetchPurchasedPlan } from "./Components/Features/plan/planSlice";
 
 const appRouter = createBrowserRouter([
   {
@@ -54,6 +55,7 @@ function AppInitializer() {
 
   useEffect(() => {
     dispatch(loadUserFromStorage());
+    dispatch(fetchPurchasedPlan());
   }, [dispatch]);
 
   return <RouterProvider router={appRouter} />;
