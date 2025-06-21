@@ -344,7 +344,7 @@ export default function TextileImageGen() {
                   className="w-4 h-4 mr-2 filter brightness-0"
                 />
                 <span className="font-semibold text-black text-md">
-                  {Coins?.managerWallet?.coins}
+                  {Coins?.managerWallet?.coins || Coins?.wallet?.coins}
                 </span>
               </div>
               <button className="bg-black px-3 py-2 rounded-r-lg flex items-center justify-center border border-black border-l-0">
