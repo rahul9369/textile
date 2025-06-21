@@ -304,141 +304,168 @@ export default function TextileImageGen() {
         className="w-full max-w-7xl mt-10"
         id="editFormSection"
         ref={formRef}>
-        <div className="bg-gradient-to-r from-[#D88939] to-[#E9A751] p-5 rounded-xl shadow-lg space-y-4">
-          {/* Tabs and Coins */}
-          <div className="flex flex-col gap-4 sm:flex-row sm:justify-between">
-            <div className="flex flex-col sm:flex-row gap-2">
-              {[
-                { key: "generate", icon: plus, label: "Generate" },
-                { key: "edit", icon: pen, label: "Edit With AI" },
-                { key: "convert", icon: imageIcon, label: "Image to ESP" },
-                ,
-              ].map((tab) => (
-                <button
-                  key={tab.key}
-                  onClick={() => handleTabClick(tab.key)}
-                  className={`px-4 py-2 flex items-center gap-2 rounded font-semibold cursor-pointer ${
-                    selectedTab === tab.key
-                      ? "bg-black text-white"
-                      : "bg-white text-black"
-                  }`}>
-                  <img
-                    src={tab.icon}
-                    className={`w-5 h-5 ${
-                      selectedTab === tab.key ? "invert" : ""
-                    }`}
-                    alt={tab.label}
-                  />
-                  {tab.label}
-                </button>
-              ))}
-            </div>
+     <div className="bg-gradient-to-l from-[#DB9245] to-[#FBDBB5] p-5 rounded-xl shadow-lg space-y-4 ">
 
-            <div className="flex items-center justify-between sm:justify-end gap-2">
-              <div className="flex items-center bg-white px-4 py-1 rounded-l-lg border border-black">
-                <img
-                  src={coin}
-                  alt="coin"
-                  className="w-4 h-4 mr-2 filter brightness-0"
-                />
-                <span className="font-semibold text-black text-md">25693</span>
-              </div>
-              <button className="bg-black px-3 py-2 rounded-r-lg flex items-center justify-center border border-black border-l-0">
-                <FaPlus className="text-white text-sm" />
-              </button>
-              {selectedTab === "generate" && (
-                <button className="p-2 rounded-xl bg-black hover:bg-gray-800 transition">
-                  <Link to="/textileai">
-                    <FaCog className="text-orange-400 text-lg" />
-                  </Link>
-                </button>
-              )}
-            </div>
-          </div>
+  {/* Coins section (Mobile Only - tabs ke upar) */}
+ <div className="flex justify-end items-center sm:hidden">
+  <div className="flex items-center bg-white pl-3 pr-1 py-1 rounded-lg border border-black mr-3">
+    <div className="flex items-center">
+      <img src={coin} alt="coin" className="w-4 h-4 mr-1 filter brightness-0" />
+      <span className="font-semibold text-black text-sm">25693</span>
+    </div>
+    <button className="ml-1.5 flex items-center justify-center bg-black w-6 h-6 rounded-md border border-black">
+      <FaPlus className="text-white text-sm" />
+    </button>
+  </div>
+  {selectedTab === "generate" && (
+    <button className="p-2 rounded-xl bg-black hover:bg-gray-800 transition">
+      <Link to="/textileai">
+        <FaCog className="text-orange-400 text-lg" />
+      </Link>
+    </button>
+  )}
+</div>
 
-          {/* Prompt Input and Upload */}
-          <div className="flex flex-col sm:flex-row relative items-stretch gap-2 bg-white rounded-md overflow-hidden p-1">
-            {/* Prompt input - only for generate and edit */}
-            {(selectedTab === "generate" || selectedTab === "edit") && (
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  value={prompt}
-                  onChange={(e) => setPrompt(e.target.value)}
-                  placeholder={
-                    selectedTab === "generate"
-                      ? "Enter prompt to generate design"
-                      : "Enter prompt to edit design"
-                  }
-                  className={`w-full px-4 py-2 outline-none text-sm sm:text-base pr-36 ${
-                    errorMsg && !prompt ? "border border-red-500" : ""
-                  }`}
-                />
 
-                {/* Show uploaded image link (for edit mode) */}
-                {selectedEditImage && (
-                  <a
-                    href={selectedEditImage}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="absolute right-8 top-3 text-xs text-blue-600 underline truncate max-w-[140px]">
-                    📎 {selectedEditImage}
-                  </a>
-                )}
-              </div>
-            )}
+  {/* Tabs (Mobile version) */}
+  <div className="flex flex-row justify-center gap-1 sm:hidden py-1">
+    {[
+      { key: "generate", icon: plus, label: "Generate" },
+      { key: "edit", icon: pen, label: "Edit With AI" },
+      { key: "convert", icon: imageIcon, label: "Image to EPS" },
+    ].map((tab) => (
+      <button
+        key={tab.key}
+        onClick={() => handleTabClick(tab.key)}
+        className={`px-2 py-1 flex items-center gap-1 rounded font-semibold cursor-pointer text-xs ${
+          selectedTab === tab.key ? "bg-black text-white" : "bg-white text-black"
+        }`}>
+        <img
+          src={tab.icon}
+          className={`w-4 h-4 ${selectedTab === tab.key ? "invert" : ""}`}
+          alt={tab.label}
+        />
+        {tab.label}
+      </button>
+    ))}
+  </div>
 
-            {/* File Upload */}
-            <input
-              type="file"
-              id="fileUpload"
-              accept="image/*"
-              onChange={handleFileChange}
-              className={`${
-                selectedTab === "generate" || selectedTab === "edit"
-                  ? "w-auto"
-                  : "w-full"
-              }`}
-            />
+  {/* Tabs + Coins (Desktop version - original structure untouched) */}
+  <div className="hidden sm:flex sm:flex-row sm:justify-between">
+    <div className="flex flex-row gap-2">
+      {[
+        { key: "generate", icon: plus, label: "Generate" },
+        { key: "edit", icon: pen, label: "Edit With AI" },
+        { key: "convert", icon: imageIcon, label: "Image to EPS" },
+      ].map((tab) => (
+        <button
+          key={tab.key}
+          onClick={() => handleTabClick(tab.key)}
+          className={`px-4 py-2 flex items-center gap-2 rounded font-semibold cursor-pointer ${
+            selectedTab === tab.key ? "bg-black text-white" : "bg-white text-black"
+          }`}>
+          <img
+            src={tab.icon}
+            className={`w-5 h-5 ${selectedTab === tab.key ? "invert" : ""}`}
+            alt={tab.label}
+          />
+          {tab.label}
+        </button>
+      ))}
+    </div>
 
-            <label htmlFor="fileUpload">
-              <img
-                src={vector}
-                className="absolute top-3 right-44 cursor-pointer"
-                alt="Upload Icon"
-              />
-            </label>
+    <div className="flex items-center justify-end gap-2">
+      <div className="flex items-center bg-white px-4 py-1 rounded-l-lg border border-black">
+        <img src={coin} alt="coin" className="w-4 h-4 mr-2 filter brightness-0" />
+        <span className="font-semibold text-black text-md">25693</span>
+      </div>
+      <button className="bg-black px-3 py-2 rounded-r-lg flex items-center justify-center border border-black border-l-0">
+        <FaPlus className="text-white text-sm" />
+      </button>
+      {selectedTab === "generate" && (
+        <button className="p-2 rounded-xl bg-black hover:bg-gray-800 transition">
+          <Link to="/textileai">
+            <FaCog className="text-orange-400 text-lg" />
+          </Link>
+        </button>
+      )}
+    </div>
+  </div>
 
-            {/* Submit Button */}
-            <button
-              onClick={handleSubmit}
-              disabled={loading}
-              className={`${
-                loading ? "bg-orange-300 cursor-not-allowed" : "bg-orange-400"
-              } sm:w-44 w-full px-4 py-2 hover:bg-orange-500 rounded-lg cursor-pointer text-white font-semibold flex justify-center items-center gap-2`}>
-              {loading
-                ? "Processing..."
-                : selectedTab === "generate"
-                ? "Generate"
-                : selectedTab === "edit"
-                ? "Edit"
-                : "Convert"}
-              <span className="text-white px-1 rounded-full text-md">
-                {numImages}
-              </span>
-              <img src={coin} className="w-4 h-4" />
-            </button>
-          </div>
+  {/* Prompt Input & Upload */}
+<div className="relative bg-[#FBDBB5] rounded-md overflow-hidden p-1 sm:p-1 flex flex-col justify-between h-[150px] sm:h-auto border-[1px] border-[#292C33]">
 
-          {/* Error message display */}
-          {errorMsg && (
-            <p className="text-red-600 text-sm mt-2 ml-1 font-medium">
-              {errorMsg}
-            </p>
-          )}
+  {/* Input Section */}
+  {(selectedTab === "generate" || selectedTab === "edit") && (
+    <div className="relative w-full">
+      <input
+        type="text"
+        value={prompt}
+        onChange={(e) => setPrompt(e.target.value)}
+        placeholder={
+          selectedTab === "generate"
+            ? "Enter prompt to generate design"
+            : "Enter prompt to edit design"
+        }
+        className={`w-full px-4 py-3 outline-none text-sm ${
+          errorMsg && !prompt ? "border border-red-500" : ""
+        }`}
+      />
 
-          {/* Show Generated Result */}
-        </div>
+      {/* Edit image link */}
+      {selectedEditImage && (
+        <a
+          href={selectedEditImage}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="absolute left-4 top-14 text-xs text-blue-600 underline truncate max-w-[140px]">
+          📎 {selectedEditImage}
+        </a>
+      )}
+    </div>
+  )}
+
+  {/* Upload icon absolutely positioned */}
+  <label
+    htmlFor="fileUpload"
+    className="absolute right-3 bottom-[55px] sm:bottom-auto sm:top-2.5 sm:right-3 cursor-pointer">
+    <img src={vector} className="w-4 h-4 sm:w-6 sm:h-6" alt="Upload Icon" />
+  </label>
+
+  <input
+    type="file"
+    id="fileUpload"
+    accept="image/*"
+    onChange={handleFileChange}
+    className="hidden"
+  />
+
+  {/* Submit Button */}
+  <button
+    onClick={handleSubmit}
+    disabled={loading}
+    className={`absolute bottom-0 left-0 right-0 px-4 py-3 rounded-lg font-semibold flex justify-center items-center gap-2 ${
+      loading ? "bg-orange-300 cursor-not-allowed" : "bg-orange-400 hover:bg-orange-500"
+    } sm:static sm:w-full`}>
+    {loading
+      ? "Processing..."
+      : selectedTab === "generate"
+      ? "Generate"
+      : selectedTab === "edit"
+      ? "Edit"
+      : "Convert"}
+    <span className="px-1 rounded-full text-md">{numImages}</span>
+    <img src={coin} className="w-4 h-4" />
+  </button>
+
+</div>
+
+  {errorMsg && (
+    <p className="text-red-600 text-sm mt-2 ml-1 font-medium">{errorMsg}</p>
+  )}
+</div>
+
+
       </div>
 
       {/* Modal Preview */}

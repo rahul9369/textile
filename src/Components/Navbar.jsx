@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import Logo from "../assets/logo.png";
 import { useSelector } from "react-redux";
+import "./Navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -89,7 +90,7 @@ const Navbar = () => {
           ) : (
             <Link
               to="/signin"
-              className="px-5 py-2 rounded-full bg-black text-white hover:opacity-90 transition">
+              className="get-started-btn px-5 py-2 rounded-full bg-black text-white transition">
               Get Started
             </Link>
           )}

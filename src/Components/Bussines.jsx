@@ -8,10 +8,12 @@ import star from "../assets/star.png";
 import Pdf from "../assets/FABRIQS.pdf";
 import download from "../assets/Group.png";
 import learn from "../assets/learn.png";
+import "./Bussines.css";
+
 
 export default function BusinessDashboard() {
   return (
-    <div className="min-h-[120vh] relative bg-[linear-gradient(#FBDBB5_97.45%)] text-gray-900 font-sans">
+    <div className="business-page min-h-[120vh] relative bg-[linear-gradient(#FBDBB5_97.45%)] text-gray-900 font-sans">
 
       <div className="mx-auto">
         {/* Desktop View */}
@@ -28,7 +30,7 @@ export default function BusinessDashboard() {
               </motion.h1>
 
               {/* Features */}
-              <div className="grid grid-cols-1 absolute right-[120px] sm:grid-cols-2 md:grid-cols-2 gap-4 mb-5">
+              <div className="grid grid-cols-1 absolute right-[120px] sm:grid-cols-2 md:grid-cols-2 gap-4 mb-5 cursor-pointer">
                 {[
                   { img: manage, title: "Manage Multiple Firms", desc: "Seamlessly Switch Between Businesses From One Dashboard" },
                   { img: map, title: "All-in-One Dashboard", desc: "Control Panel To Track Orders, Users, Insights, And Trends" },
