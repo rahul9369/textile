@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { logout } from "./features/auth/authSlice";
-import { setSelectedPlan } from "./Features/plan/planSlice";
+// import { logout } from "./features/auth/authSlice";
+// import { setSelectedPlan } from "./Features/plan/planSlice";
 import { toast } from "react-toastify";
+import { logout } from "../features/auth/authSlice";
+import { setSelectedPlan } from "../features/plan/planSlice";
 
 const AccountPage = () => {
   const currentUser = useSelector((state) => state?.auth?.user);

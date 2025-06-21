@@ -9,7 +9,7 @@ import vector from "../../assets/Vector.png";
 import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
-import { setResultImages } from "../Features/Generate/generateSlice";
+import { setResultImages } from "../../features/generate/generateSlice";
 
 export default function TextileImageGen() {
   const [selectedTab, setSelectedTab] = useState("generate");

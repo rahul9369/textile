@@ -2,8 +2,9 @@ import React, { useState } from "react";
 import { FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { loginSuccess } from "./features/auth/authslice";
+
 import { toast } from "react-toastify";
+import { loginSuccess } from "../features/auth/authSlice";
 
 const AuthForm = () => {
   const [activeTab, setActiveTab] = useState("login");

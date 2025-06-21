@@ -10,8 +10,8 @@ import AccountPage from "./Components/Account";
 import { store } from "./store";
 import { Provider, useDispatch } from "react-redux";
 import { useEffect } from "react";
-import { loadUserFromStorage } from "./Components/Features/auth/authSlice";
-import { fetchPurchasedPlan } from "./Components/Features/plan/planSlice";
+import { loadUserFromStorage } from "./features/auth/authSlice";
+import { fetchPurchasedPlan } from "./features/plan/planSlice";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 
