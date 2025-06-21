@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { motion, useAnimation } from "framer-motion";
 import Img from "../assets/phoneimg.png";
 import textImg from "../assets/text.png";
 import frame from "../assets/Frame.png";
@@ -7,6 +7,7 @@ import alrts from "../assets/alrts.png";
 import { useInView } from "react-intersection-observer";
 import { Link } from "react-router-dom";
 import download from "../assets/Group.png";
+import "./Landing.css";
 
 function AnimatedCounter({ value, duration = 2000, isVisible }) {
   const [count, setCount] = useState(0);
@@ -38,8 +39,61 @@ export default function TextileLandingPage() {
     threshold: 0.5,
   });
 
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, []);
+
+  const [width, setWidth] = useState(
+    typeof window !== "undefined" ? window.innerWidth : 0
+  );
+
+  useEffect(() => {
+    const handleResize = () => setWidth(window.innerWidth);
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  const isMobile = width > 0 && width < 640;
+
+  const controls1 = useAnimation();
+  const controls2 = useAnimation();
+  const controls3 = useAnimation();
+
+  useEffect(() => {
+    if (hasMounted) {
+      const startAnimations = async () => {
+        await Promise.all([
+          controls1.start({
+            opacity: 1,
+            scale: 1,
+            top: isMobile ? "7%" : "15%",
+            left: isMobile ? "8%" : "-10%",
+            transition: { duration: 1, ease: "easeOut", delay: 0.4 },
+          }),
+          controls2.start({
+            opacity: 1,
+            scale: 1,
+            top: "55%",
+            left: "auto",
+            right: "2%",
+            transition: { duration: 1, ease: "easeOut", delay: 0.8 },
+          }),
+          controls3.start({
+            opacity: 1,
+            scale: 1,
+            top: isMobile ? "75%" : "85%",
+            left: isMobile ? "0%" : "2%",
+            transition: { duration: 1, ease: "easeOut", delay: 1.2 },
+          }),
+        ]);
+      };
+      startAnimations();
+    }
+  }, [hasMounted, isMobile, controls1, controls2, controls3]);
+
   return (
-    <div className="min-h-screen pt-20 sm:pt-0 bg-[linear-gradient(77.05deg,_#DB9245_2.55%,_#FBDBB5_97.45%)] text-gray-900 px-4 sm:px-6 md:px-10 flex flex-col md:flex-row items-center justify-between relative overflow-x-hidden">
+    <div className="landing-fade-in min-h-screen pt-20 sm:pt-0 bg-[linear-gradient(77.05deg,_#DB9245_2.55%,_#FBDBB5_97.45%)] text-gray-900 px-4 sm:px-6 md:px-10 flex flex-col md:flex-row items-center justify-between relative overflow-hidden">
       {/* Left Content */}
       <div className="w-full md:w-1/2 order-1 md:order-1">
         <div className="w-full max-w-xl mx-auto space-y-4 sm:space-y-6 text-center md:text-left">
@@ -48,19 +102,16 @@ export default function TextileLandingPage() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            <p className="text-[22px] sm:text-[30px] md:text-5xl font-bold text-black leading-snug">
+            <p className="landing-heading-animate text-[22px] sm:text-[30px] md:text-5xl font-bold text-black leading-snug">
               From Thread to Triumph
             </p>
-            <p className="text-[16px] sm:text-[24px] md:text-4xl text-gray-800 mt-1">
+            <p className="landing-subheading-animate text-[16px] sm:text-[24px] md:text-4xl text-gray-800 mt-1">
               Automate Your Textile Business
             </p>
           </motion.div>
 
-          <motion.p
-            className="pt-6 sm:pt-10 text-[14px] sm:text-base text-gray-700"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.3, duration: 0.6 }}
+          <p
+            className="landing-desc-animate pt-6 sm:pt-10 text-[14px] sm:text-base text-gray-700"
           >
             The Only App You'll Ever Need To{" "}
             <strong>
@@ -68,12 +119,12 @@ export default function TextileLandingPage() {
               Firms, Orders, Inventory,
             </strong>{" "}
             And <strong>Textile Design</strong>.
-          </motion.p>
+          </p>
 
           {/* Stats */}
           <div
   ref={ref}
-  className="flex flex-wrap gap-2 justify-between"
+  className="flex flex-wrap gap-2 justify-between cursor-pointer "
 >
   {[
     { value: 98, label: "User Satisfaction Rate" },
@@ -82,9 +133,10 @@ export default function TextileLandingPage() {
   ].map((stat, idx) => (
     <div
       key={idx}
-      className="bg-orange-200 shadow rounded-lg p-1 w-[30%] text-center h-24 flex flex-col justify-center items-center"
+      className="landing-card landing-card-animate bg-orange-200 shadow rounded-lg p-1 w-[30%] text-center h-24 flex flex-col justify-center items-center"
+      style={{ '--delay': `${0.9 + idx * 0.2}s` }}
     >
-      <p className="text-lg sm:text-xl font-bold text-orange-500 leading-tight">
+      <p className="text-lg sm:text-xl font-bold text-orange-500 leading-tight mb-3">
         <AnimatedCounter value={stat.value} isVisible={inView} />
       </p>
       <p className="text-[10px] sm:text-xs leading-tight text-center break-words">
@@ -103,17 +155,22 @@ export default function TextileLandingPage() {
 >
   <Link
     to="/signin"
-    className="w-[48%] sm:w-60 text-white px-4 py-2 sm:py-2 rounded-full border border-white text-center bg-transparent hover:bg-white hover:text-black flex items-center justify-center text-xs sm:text-sm"
+    className="landing-btn landing-btn-left w-[48%] sm:w-60 text-white px-4 py-2 sm:py-2 rounded-full border border-white text-center bg-transparent hover:bg-white hover:text-black flex items-center justify-center text-xs sm:text-sm font-medium flex-shrink-0"
   >
     Get Started
   </Link>
+  
   <a
     href="https://play.google.com/store/apps/details?id=com.fabriqs"
     target="_blank"
     rel="noopener noreferrer"
-    className="bg-white flex items-center gap-1 text-orange-300 w-[48%] sm:w-60 justify-center border border-orange-500 px-4 py-2 sm:py-2 rounded-full shadow text-center text-xs sm:text-sm"
+    className="landing-btn landing-btn-right bg-white flex items-center gap-1 text-orange-300 w-[48%] sm:w-60 justify-center border border-orange-500 px-4 py-2 sm:py-2 rounded-full shadow text-center text-xs sm:text-sm flex-shrink-0"
   >
-    <img src={download} className="w-4 h-4" alt="Download Icon" />
+    <img 
+      src={download} 
+      className="w-4 h-4 download-icon" 
+      alt="Download Icon"
+    />
     <span className="font-semibold whitespace-nowrap">Download Now</span>
   </a>
 </motion.div>
@@ -124,22 +181,21 @@ export default function TextileLandingPage() {
       {/* Right Image and Popups */}
       <motion.div
         className="w-full md:w-1/2 flex justify-center items-center relative mt-10 md:mt-0 order-2 md:order-2"
-        initial={{ opacity: 0, x: 50 }}
-        animate={{ opacity: 1, x: 0 }}
-        transition={{ delay: 0.4, duration: 0.6 }}
       >
-        <img
+        <motion.img
           src={Img}
           alt="App Screenshot"
           className="w-[85%] sm:w-[75%] md:w-full max-w-[400px] xl:max-w-[680px] h-auto rounded-xl"
+          initial={{ opacity: 0, y: 100 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: "easeOut", delay: 0.5 }}
         />
 
-        {/* Top Left Popup */}
+        {/* Top Left Popup - Order Update */}
         <motion.div
-          className="absolute top-[7%] sm:top-[15%] left-[2%] sm:left-[-10%] w-[150px] sm:w-[200px] md:w-[240px]"
-          animate={{ y: [0, -5, 0] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          whileHover={{ scale: 1.05 }}
+          className="landing-float absolute w-[150px] sm:w-[200px] md:w-[240px]"
+          initial={{ opacity: 0, scale: 0.5, top: "40%", left: "27%" }}
+          animate={controls1}
         >
           <img
             src={textImg}
@@ -148,12 +204,11 @@ export default function TextileLandingPage() {
           />
         </motion.div>
 
-        {/* Top Right Popup */}
+        {/* Bottom Right Popup - Invoice Due Alert */}
         <motion.div
-          className="absolute top-[25%] right-[2%] sm:right-[2%] w-[150px] sm:w-[200px] md:w-[240px]"
-          animate={{ y: [0, -5, 0] }}
-          transition={{ duration: 2.2, repeat: Infinity }}
-          whileHover={{ scale: 1.05 }}
+          className="landing-float absolute w-[150px] sm:w-[200px] md:w-[240px]"
+          initial={{ opacity: 0, scale: 0.5, top: "40%", left: "27%" }}
+          animate={controls2}
         >
           <img
             src={alrts}
@@ -162,12 +217,11 @@ export default function TextileLandingPage() {
           />
         </motion.div>
 
-        {/* Bottom Left Popup */}
+        {/* Bottom Left Popup - Textile Design */}
         <motion.div
-          className="absolute bottom-[4%] left-[0%] sm:left-[2%] w-[150px] sm:w-[200px] md:w-[240px]"
-          animate={{ y: [0, -5, 0] }}
-          transition={{ duration: 1.8, repeat: Infinity }}
-          whileHover={{ scale: 1.05 }}
+          className="landing-float absolute w-[150px] sm:w-[200px] md:w-[240px]"
+          initial={{ opacity: 0, scale: 0.5, top: "40%", left: "27%" }}
+          animate={controls3}
         >
           <img
             src={frame}

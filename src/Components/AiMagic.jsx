@@ -7,10 +7,11 @@ import pen from "../assets/pen.png";
 import plus from "../assets/plus.png";
 import star from "../assets/star.png";
 import { Link } from "react-router-dom";
+import "./AiMagic.css";
 
 export default function AiMagicSection() {
   return (
-    <div className="bg-[linear-gradient(#FBDBB5_97.45%)] px-4 md:px-16 pt-2 pb-16 font-sans text-gray-900 ">
+    <div className="ai-magic-page bg-[linear-gradient(#FBDBB5_97.45%)] px-4 md:px-16 pt-2 pb-16 font-sans text-gray-900 ">
       <div className="bg-gradient-to-r rounded-xl p-5 pt-0 from-[#fdbb78] to-[#fda769] mt-8 md:mt-0">
         {/* Main Container */}
         <div className="bg-gradient-to-r relative from-[#fdbb78] to-[#fda769] rounded-xl p-0 md:p-12 flex flex-col lg:flex-row justify-between items-center gap-10">
@@ -55,7 +56,7 @@ export default function AiMagicSection() {
             </motion.h2>
 
             {/* Features */}
-       <div className="grid grid-cols-2 gap-3">
+       <div className="grid grid-cols-2 gap-3 cursor-pointer">
   {[
     {
       img: plus,
@@ -120,7 +121,7 @@ export default function AiMagicSection() {
               ].map((stat, idx) => (
                 <div
                   key={idx}
-                  className="bg-orange-200 p-4 rounded-2xl shadow-lg text-center">
+                  className="ai-magic-stats-card bg-orange-200 p-4 rounded-2xl shadow-lg text-center">
                   <div className="text-xl md:text-2xl font-bold">
                     {stat.value}
                   </div>

@@ -1,0 +1,58 @@
+/* AiMagic Page Animations */
+
+/* Button hover effects - Light animations */
+.ai-magic-page button.flex {
+  transform-origin: center;
+  will-change: transform, box-shadow;
+  flex-shrink: 0;
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.ai-magic-page button.flex:hover, .ai-magic-page button.flex:focus {
+  transform: scale(1.02) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  background: linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%) !important;
+  color: #000 !important;
+}
+
+.ai-magic-page button.flex:active {
+  transform: scale(0.98) !important;
+}
+
+/* Statistics Cards hover effects - Light animations like Landing page */
+.ai-magic-page .ai-magic-stats-card {
+  transition: all 0.3s ease;
+  position: relative;
+  cursor: pointer;
+}
+
+.ai-magic-page .ai-magic-stats-card:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1) !important;
+  background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%) !important;
+}
+
+/* Mobile specific fixes */
+@media (max-width: 768px) {
+  .ai-magic-page button.flex {
+    transform-origin: center;
+    min-width: 0;
+    flex-shrink: 0;
+  }
+  
+  .ai-magic-page button.flex:hover, .ai-magic-page button.flex:focus {
+    transform: scale(1.01) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  .ai-magic-page button.flex:active {
+    transform: scale(0.99) !important;
+  }
+  
+  .ai-magic-page .ai-magic-stats-card:hover {
+    transform: translateY(-1px) !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  }
+} 
